@@ -1,7 +1,7 @@
 import React from "react";
 
 import CodeDisplay from "./CodeDisplay";
-import AddCode from "./AddCode";
+import AddVariable from "./AddVariable";
 import Stack from "react-bootstrap/Stack";
 import Container from "react-bootstrap/Container";
 class CodeHolder extends React.Component{
@@ -10,16 +10,16 @@ class CodeHolder extends React.Component{
 
     constructor(props){
         super(props);
-        this.handleNewCodeSubmitted = this.handleNewCodeSubmitted.bind(this);
+        this.handleNewVariableSubmitted = this.handleNewVariableSubmitted.bind(this);
         this.state={
             codeBlocks:[]  //empty list to start with
         }
     }
 
-    handleNewCodeSubmitted(newCode){
+    handleNewVariableSubmitted(newVariableName,newVariableAssignment){
 
         this.setState({
-            codeBlocks: [...this.state.codeBlocks,newCode]//...turns it into a list of items
+            codeBlocks: [...this.state.codeBlocks,`${newVariableName} = ${newVariableAssignment}`]//...turns it into a list of items
         })
       
     }
@@ -30,7 +30,7 @@ class CodeHolder extends React.Component{
             <Container type="sm">
                 <Stack>
                 <CodeDisplay code={this.state.codeBlocks}/>
-                <AddCode  submitCode={this.handleNewCodeSubmitted}/>
+                <AddVariable  submitVariable={this.handleNewVariableSubmitted}/>
             </Stack>
             </Container>
         );

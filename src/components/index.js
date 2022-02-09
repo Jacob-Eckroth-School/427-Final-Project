@@ -3,6 +3,6 @@
 
 export {default as Header} from "./Header"
 
-export {default as AddCode} from "./AddCode"
+export {default as AddVariable} from "./AddVariable"
 export {default as CodeDisplay} from "./CodeDisplay"
 export {default as CodeHolder} from "./CodeHolder"
