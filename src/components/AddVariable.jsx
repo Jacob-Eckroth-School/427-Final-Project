@@ -39,6 +39,7 @@ class AddVariable extends React.Component {
 
   submitVariable() {
     this.props.submitVariable(
+        "LibA",
         this.state.variableName,
         this.state.variableAssignmentType,
         this.state.variableAssignment
@@ -101,10 +102,10 @@ class AddVariable extends React.Component {
             type="text"
             placeholder="Variable Value"
             onChange={this.handleVariableValueChange}
-            hidden={this.state.variableAssignmentType == variableAssignmentTypes.USER_INPUTED_VALUE ? false : true}
+            hidden={this.state.variableAssignmentType === variableAssignmentTypes.USER_INPUTED_VALUE ? false : true}
           />
           <Form.Text className="text-muted"
-          hidden={this.state.variableAssignmentType == variableAssignmentTypes.USER_INPUTED_VALUE ? false : true}>
+          hidden={this.state.variableAssignmentType === variableAssignmentTypes.USER_INPUTED_VALUE ? false : true}>
           Assign a value to this variable.
           </Form.Text>
         </Form.Group>
