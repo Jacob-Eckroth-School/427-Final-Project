@@ -30,6 +30,7 @@ class AddVariable extends React.Component {
   }
 
   handleVariableNameChange(event) {
+   
     this.setState({ variableName: event.target.value });
   }
   handleVariableValueChange(event){
@@ -48,12 +49,14 @@ class AddVariable extends React.Component {
   }
 
   lambdaStringChosen(event) {
+   
       this.setState({
           variableAssignmentType: variableAssignmentTypes.LAMBDA_LENGTH_STRING
       });
       
   }
   userEnteredVariableChosen(event) {
+   
     this.setState({
         variableAssignmentType: variableAssignmentTypes.USER_INPUTED_VALUE
     })

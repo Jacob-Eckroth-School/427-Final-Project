@@ -1,8 +1,20 @@
 
 .codeText{
-    font-size: large;
+
     font-family: 'Source Code Pro', monospace;
     margin:none;
+}
+
+.subRoutineTitle{
+    font-size:large;
+    font-family: 'Source Code Pro', monospace;
+    margin:none;
+}
+.libraryTitle{
+    padding-top:10px;
+    font-size:xx-large;
+    font-family: 'Source Code Pro', monospace;
+   
 }
 
 .codeLineHolder{
