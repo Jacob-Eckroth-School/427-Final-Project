@@ -1,29 +1,27 @@
 import React from "react";
-import { Container, Stack } from "react-bootstrap";
+import { Stack } from "react-bootstrap";
 import { typeOfCodeLine, variableAssignmentTypes } from "../constants/variableAssignmentTypes";
 import { List} from 'react-movable';
 import { LineOfCode } from ".";
-
-import SubRoutineDisplay from "./SubRoutineDisplay";
+import Container from "react-bootstrap/Container"
 
 //displays a library?
-class LibraryDisplay extends React.Component {
+class SubRoutineDisplay extends React.Component {
   
     constructor(props){
         super(props);
         this.constructCodeRenderObject = this.constructCodeRenderObject.bind(this);
         this.state = 
         {
-            library:this.props.library,
-         
+            subRoutine:this.props.subRoutine
         }
         
     }
 
     constructCodeRenderObject(codeBlock,newProps){
-
+        
         var codeParagraph;
-       
+        
         if(codeBlock.type === typeOfCodeLine.VARIABLE_ASSIGNMENT){ //if the line is a variable assignment line
             if(codeBlock.variableAssignmentType ===variableAssignmentTypes.LAMBDA_LENGTH_STRING){
                 codeParagraph= <p className="codeText">{codeBlock.variableName} =  &#123;0,1&#125;
@@ -44,26 +42,20 @@ class LibraryDisplay extends React.Component {
   render() {
     return (
       <Stack>
-          <h1 className="libraryTitle">{this.state.library.name}</h1>
-          <Container className="p-0 border border-dark">
-            <List
-                values={this.state.library.code}
-                onChange={({ oldIndex, newIndex }) =>{
-                    this.state.library.updateItemOrder(oldIndex,newIndex)  
-                        this.setState({
-                            library: this.state.library
-                        })
-                    }}
-                    renderList={({ children, props }) => <Stack {...props}>{children}</Stack>}
-                    renderItem={({ value, props }) => this.constructCodeRenderObject(value,props)}
-                />
-                {this.state.library.subRoutines.map((subRoutine)=>
-                <Container key={subRoutine.name}>
-
-                <SubRoutineDisplay  subRoutine={subRoutine} />
-                </Container>
-                )}
-        </Container>
+          <h2 className="subRoutineTitle">{this.state.subRoutine.name + '():'}</h2>
+       <Container className="px-3">
+          <List
+           values={this.state.subRoutine.code}
+           onChange={({ oldIndex, newIndex }) =>{
+               this.state.subRoutine.updateItemOrder(oldIndex,newIndex)  
+                this.setState({
+                    subRoutine: this.state.subRoutine
+                })
+            }}
+            renderList={({ children, props }) => <Stack {...props}>{children}</Stack>}
+            renderItem={({ value, props }) => this.constructCodeRenderObject(value,props)}
+        />
+         </Container>
           
       
        
@@ -72,4 +64,4 @@ class LibraryDisplay extends React.Component {
   }
 }
 
-export default LibraryDisplay;
+export default SubRoutineDisplay;
