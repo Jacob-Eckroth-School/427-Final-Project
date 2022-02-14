@@ -1,16 +1,16 @@
 import React from "react";
 
-import LibraryDisplay from "./LibraryDisplay";
-import AddVariable from "./AddVariable";
+import {LibraryDisplay} from "./LibraryDisplay";
+import {AddVariable} from "./AddVariable";
 import Stack from "react-bootstrap/Stack";
 import Container from "react-bootstrap/Container";
 import { typeOfCodeLine } from "../constants/variableAssignmentTypes";
-import { CodeBlock } from ".";
-import { Library } from ".";
-import SubRoutine from "../classes/SubRoutine";
+import { CodeBlock } from "../classes/CodeBlock";
+import { Library } from "../classes/Library";
+import {SubRoutine} from "../classes/SubRoutine";
 import {variableAssignmentTypes} from "../constants/variableAssignmentTypes"
 
-class CodeHolder extends React.Component {
+export class CodeHolder extends React.Component<{},{totalLines:number,libraries:Library[]}> {
   constructor(props) {
     super(props);
     this.handleNewVariableSubmitted =
@@ -24,7 +24,7 @@ class CodeHolder extends React.Component {
   }
 
   initializeTestLibraries() {
-    let l1 = new Library("LibA", []);
+    let l1:Library = new Library("LibA", []);
     l1.addSubRoutine(new SubRoutine("LibA", "TestSubRoutine", []));
     l1.addSubRoutine(new SubRoutine("LibA", "TestSubRoutine2", []));
     l1.addCodeBlockToSubRoutine(
@@ -69,18 +69,17 @@ class CodeHolder extends React.Component {
         totalLines: this.state.totalLines + 1,  //TODO: get a beter way of assigning keys lol
     });
 
-
+    this.state.libraries.push(l1);
     this.setState({
-      libraries: this.state.libraries.push(l1),
-      
+       libraries:this.state.libraries
     });
   }
 
   handleNewVariableSubmitted(
-    libraryName,
-    newVariableName,
-    newVariableAssignmentType,
-    newVariableAssignment
+    libraryName:string,
+    newVariableName:string,
+    newVariableAssignmentType:number,
+    newVariableAssignment:string
   ) {
     let c = new CodeBlock(
       typeOfCodeLine.VARIABLE_ASSIGNMENT,
@@ -107,7 +106,7 @@ class CodeHolder extends React.Component {
 
   render() {
     return (
-      <Container type="sm">
+      <Container>
         <Stack>
           <LibraryDisplay library={this.state.libraries[0]} />
           <AddVariable submitVariable={this.handleNewVariableSubmitted} />
@@ -116,5 +115,3 @@ class CodeHolder extends React.Component {
     );
   }
 }
-
-export default CodeHolder;

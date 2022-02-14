@@ -2,12 +2,12 @@ import React from "react";
 import { Container, Stack } from "react-bootstrap";
 import { typeOfCodeLine, variableAssignmentTypes } from "../constants/variableAssignmentTypes";
 import { List} from 'react-movable';
-import { LineOfCode } from ".";
-
-import SubRoutineDisplay from "./SubRoutineDisplay";
+import { LineOfCode } from "./LineOfCode";
+import {Library} from "../classes/Library";
+import {SubRoutineDisplay} from "./SubRoutineDisplay";
 
 //displays a library?
-class LibraryDisplay extends React.Component {
+export class LibraryDisplay extends React.Component<{library:Library},{library:Library}>{
   
     constructor(props){
         super(props);
@@ -22,7 +22,7 @@ class LibraryDisplay extends React.Component {
 
     constructCodeRenderObject(codeBlock,newProps){
 
-        var codeParagraph;
+        var codeParagraph: any; //any because it becomes HTML garbage
        
         if(codeBlock.type === typeOfCodeLine.VARIABLE_ASSIGNMENT){ //if the line is a variable assignment line
             if(codeBlock.variableAssignmentType ===variableAssignmentTypes.LAMBDA_LENGTH_STRING){
@@ -72,4 +72,4 @@ class LibraryDisplay extends React.Component {
   }
 }
 
-export default LibraryDisplay;
+

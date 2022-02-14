@@ -1,6 +1,9 @@
-
-
-class CodeBlock{
+export class CodeBlock{
+    type: number;
+    variableName: string;
+    variableAssignmentType:number;
+    variableAssignment:string;
+    key:string;
     constructor(
         type,variableName,variableAssignmentType,variableAssignment,key
     ){
@@ -14,5 +17,3 @@ class CodeBlock{
    
 }
 
-
-export default CodeBlock
