@@ -5,7 +5,7 @@ import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import { variableAssignmentTypes } from "../constants/variableAssignmentTypes";
 
-class AddVariable extends React.Component {
+export class AddVariable extends React.Component<{submitVariable:Function},{variableName:string,variableAssignment:string,variableAssignmentType:number}> {
 
   constructor(props) {
     super(props);
@@ -45,7 +45,7 @@ class AddVariable extends React.Component {
         this.state.variableAssignmentType,
         this.state.variableAssignment
     );
-    document.getElementById("variableForm").reset();
+    (document.getElementById("variableForm") as HTMLInputElement).form.reset();
   }
 
   lambdaStringChosen(event) {
@@ -121,4 +121,4 @@ class AddVariable extends React.Component {
   }
 }
 
-export default AddVariable;
+

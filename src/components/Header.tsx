@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "react-bootstrap/Navbar"
 import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
-function Header() {
+export function Header() {
   return (
     <Navbar bg="dark" variant="dark">
       <Container>
@@ -17,4 +17,4 @@ function Header() {
   );
 }
 
-export default Header;
+
