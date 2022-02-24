@@ -28,5 +28,9 @@ export class PreviousLibraries<T> implements IStack<T>{
     at(index:number):T | undefined{
         return this.storage.at(index);
     }
+    remove(index:number):T[]|undefined{
+      
+        return  this.storage.splice(index,1);
+    }
     
 }
