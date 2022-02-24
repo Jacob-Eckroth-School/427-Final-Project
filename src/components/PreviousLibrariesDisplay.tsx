@@ -32,8 +32,8 @@ export class PreviousLibrariesDisplay extends React.Component<{previousLibraries
         var smallLibraryDisplays:any = []
         for(let i = this.state.previousLibraries.size()-1; i >=0; i--){
             smallLibraryDisplays.push(
-                <Stack>
-                    <SavedLibraryDisplay key={this.state.previousLibraries.at(i).name + this.state.previousLibraries.at(i).versionNumber.toString()}
+                <Stack key={this.state.previousLibraries.at(i).name + this.state.previousLibraries.at(i).versionNumber.toString()}>
+                    <SavedLibraryDisplay
                     library={this.state.previousLibraries.at(i)}/>
                     <Button className="px-0 mx-0" variant="danger" onClick = {()=>this.deleteSavedLibraryAt(i)}>Delete saved library</Button>
                 </Stack>
