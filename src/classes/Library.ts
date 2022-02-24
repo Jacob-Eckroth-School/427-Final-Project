@@ -46,13 +46,14 @@ export class Library {
     }
 
     addSubRoutine(newSubRoutine: SubRoutine) {
-        this.subRoutineNames[newSubRoutine.name] = 1;//set it to 1 if it exists
+        this.subRoutineNames.set(newSubRoutine.name,1);//set it to 1 if it exists
         this.subRoutines.push(newSubRoutine);
     }
 
     addNewCodeBlock(newCodeBlock: CodeBlock) {
         if (newCodeBlock.type === typeOfCodeLine.VARIABLE_ASSIGNMENT) {
-            this.variables[newCodeBlock.variableName] = 1//TODO: make it so you can't overwrite an existing variable
+            this.variables.set(newCodeBlock.variableName,1);
+            //TODO: make it so you can't overwrite an existing variable
         }
         this.codeBlocks.push(newCodeBlock)
     }

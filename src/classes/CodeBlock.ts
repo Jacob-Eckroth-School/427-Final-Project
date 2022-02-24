@@ -5,7 +5,7 @@ export class CodeBlock{
     variableAssignment:string;
     key:string;
     constructor(
-        type,variableName,variableAssignmentType,variableAssignment,key
+        type:number,variableName:string,variableAssignmentType:number,variableAssignment:string,key:string
     ){
         this.type = type;
         this.variableName = variableName;

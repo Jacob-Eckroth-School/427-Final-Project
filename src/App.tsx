@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {CodeHolder} from './components/CodeHolder';
 
 import {Header}  from './components/Header';

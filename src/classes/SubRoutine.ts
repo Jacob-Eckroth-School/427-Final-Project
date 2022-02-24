@@ -34,7 +34,8 @@ export class SubRoutine{
     addNewCodeBlock(newCodeBlock:CodeBlock){
         //if the line of code is a variable assignment, we want to add it to our list of variables
         if(newCodeBlock.type === typeOfCodeLine.VARIABLE_ASSIGNMENT){
-            this.variables[newCodeBlock.variableName] = 1//TODO: make it so you can't overwrite an existing variable
+            this.variables.set(newCodeBlock.variableName,1);
+            //TODO: make it so you can't overwrite an existing variable
         }
         this.codeBlocks.push(newCodeBlock);
         

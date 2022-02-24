@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Stack } from "react-bootstrap";
 import { typeOfCodeLine, variableAssignmentTypes } from "../constants/variableAssignmentTypes";
 import { List } from 'react-movable';
@@ -11,7 +11,7 @@ import {CodeBlock} from "../classes/CodeBlock";
 //displays a library?
 export class SubRoutineDisplay extends React.Component<{subRoutine:SubRoutine},{subRoutine:SubRoutine}> {
 
-    constructor(props) {
+    constructor(props:any) {
         super(props);
         this.constructCodeRenderObject = this.constructCodeRenderObject.bind(this);
         this.state =

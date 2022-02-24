@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
@@ -7,7 +7,7 @@ import { variableAssignmentTypes } from "../constants/variableAssignmentTypes";
 
 export class AddVariable extends React.Component<{submitVariable:Function},{variableName:string,variableAssignment:string,variableAssignmentType:number}> {
 
-  constructor(props) {
+  constructor(props:any) {
     super(props);
     this.state = {
       variableName: "",
@@ -22,18 +22,18 @@ export class AddVariable extends React.Component<{submitVariable:Function},{vari
     this.handleVariableValueChange = this.handleVariableValueChange.bind(this);
   }
 
-  handleKeyDown(e, callback) {
+  handleKeyDown(e:any, callback:Function) {
     if (e.key === "Enter" && e.shiftKey === false) {
       e.preventDefault();
       callback();
     }
   }
 
-  handleVariableNameChange(event) {
+  handleVariableNameChange(event:any) {
    
     this.setState({ variableName: event.target.value });
   }
-  handleVariableValueChange(event){
+  handleVariableValueChange(event:any){
       this.setState({variableAssignment:event.target.value})
   }
  
@@ -48,14 +48,14 @@ export class AddVariable extends React.Component<{submitVariable:Function},{vari
     (document.getElementById("variableForm") as HTMLInputElement).form.reset();
   }
 
-  lambdaStringChosen(event) {
+  lambdaStringChosen() {
    
       this.setState({
           variableAssignmentType: variableAssignmentTypes.LAMBDA_LENGTH_STRING
       });
       
   }
-  userEnteredVariableChosen(event) {
+  userEnteredVariableChosen() {
    
     this.setState({
         variableAssignmentType: variableAssignmentTypes.USER_INPUTED_VALUE

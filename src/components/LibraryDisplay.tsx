@@ -1,15 +1,16 @@
-import React from "react";
+import * as React from "react";
 import { Container, Stack } from "react-bootstrap";
 import { typeOfCodeLine, variableAssignmentTypes } from "../constants/variableAssignmentTypes";
 import { List} from 'react-movable';
 import { LineOfCode } from "./LineOfCode";
 import {Library} from "../classes/Library";
 import {SubRoutineDisplay} from "./SubRoutineDisplay";
+import { CodeBlock } from "../classes/CodeBlock";
 
 //displays a library?
 export class LibraryDisplay extends React.Component<{library:Library},{library:Library}>{
   
-    constructor(props){
+    constructor(props:any){
         super(props);
         this.constructCodeRenderObject = this.constructCodeRenderObject.bind(this);
         this.state = 
@@ -20,7 +21,7 @@ export class LibraryDisplay extends React.Component<{library:Library},{library:L
         
     }
 
-    constructCodeRenderObject(codeBlock,newProps){
+    constructCodeRenderObject(codeBlock:CodeBlock,newProps:any){
 
         var codeParagraph: any; //any because it becomes HTML garbage
        

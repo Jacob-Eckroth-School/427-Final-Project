@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 
 import {LibraryDisplay} from "./LibraryDisplay";
 import {AddVariable} from "./AddVariable";
@@ -11,7 +11,7 @@ import {SubRoutine} from "../classes/SubRoutine";
 import {variableAssignmentTypes} from "../constants/variableAssignmentTypes"
 
 export class CodeHolder extends React.Component<{},{totalLines:number,libraries:Library[]}> {
-  constructor(props) {
+  constructor(props:any) {
     super(props);
     this.handleNewVariableSubmitted =
       this.handleNewVariableSubmitted.bind(this);
@@ -86,7 +86,7 @@ export class CodeHolder extends React.Component<{},{totalLines:number,libraries:
       newVariableName,
       newVariableAssignmentType,
       newVariableAssignment,
-      this.state.totalLines
+      this.state.totalLines.toString()
     );
     var libraryFound = false;
     for (const lib of this.state.libraries) {
