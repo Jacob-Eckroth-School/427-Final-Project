@@ -5,6 +5,7 @@
     margin:none;
 }
 
+
 .subRoutineTitle{
     font-size:large;
     font-family: 'Source Code Pro', monospace;
@@ -12,11 +13,38 @@
 }
 .libraryTitle{
     padding-top:10px;
-    font-size:xx-large;
+    font-size:x-large;
     font-family: 'Source Code Pro', monospace;
    
 }
 
+
+
 .codeLineHolder{
     padding-top:10px;
+}
+
+
+.savedLibraryTitle{
+    padding-top:10px;
+    font-size:large;
+    font-family: 'Source Code Pro', monospace;
+}
+
+.savedSubRoutineTitle{
+    font-size:medium;
+    margin-bottom:0px;
+    font-family: 'Source Code Pro', monospace;
+    margin:none;
+}
+.savedCodeText{
+    margin-top:6px;
+    font-size:small;
+    margin-bottom:0px;
+    padding:none;
+    border:none;
+}
+.savedCodeLineHolder{
+   margin:0px;
+    padding:0px;
 }

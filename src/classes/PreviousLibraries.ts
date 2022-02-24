@@ -1,4 +1,5 @@
-import {Library} from "./Library"
+
+
 interface IStack<T> {
     push(item: T): void;
     pop(): T | undefined;
@@ -6,23 +7,26 @@ interface IStack<T> {
     size(): number;
   }
 
-export class PreviousLibraries<Library> implements IStack<Library>{
-    private storage: Library[] = [];
+export class PreviousLibraries<T> implements IStack<T>{
+    private storage: T[] = [];
     constructor(private capacity:number = Infinity){}
-    push(item: Library): void {
+    push(item: T): void {
         if(this.size() === this.capacity){
             throw Error("Stack has reached max capacity, you cannot add more items");
         }
         this.storage.push(item);
     }
-    pop(): Library | undefined{
+    pop(): T | undefined{
         return this.storage.pop();
     }
-    peek(): Library | undefined{
+    peek(): T | undefined{
         return this.storage[this.size() - 1];
     }
     size(): number {
         return this.storage.length;
+    }
+    at(index:number):T | undefined{
+        return this.storage.at(index);
     }
     
 }

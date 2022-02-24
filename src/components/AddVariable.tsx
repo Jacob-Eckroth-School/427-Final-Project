@@ -45,7 +45,7 @@ export class AddVariable extends React.Component<{submitVariable:Function},{vari
         this.state.variableAssignmentType,
         this.state.variableAssignment
     );
-    (document.getElementById("variableForm") as HTMLInputElement).form.reset();
+    (document.getElementById("variableForm") as HTMLFormElement).reset();
   }
 
   lambdaStringChosen() {
