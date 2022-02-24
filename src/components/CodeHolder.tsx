@@ -13,6 +13,8 @@ import { variableAssignmentTypes } from "../constants/variableAssignmentTypes"
 import { PreviousLibraries } from "../classes/PreviousLibraries";
 import { PreviousLibrariesDisplay } from "./PreviousLibrariesDisplay";
 import { Button } from "react-bootstrap";
+import { LatexGenerator } from "../classes/LatexGenerator";
+import { PDFGenerator } from "../classes/PDFGenerator";
 
 export class CodeHolder extends React.Component<{}, { totalLines: number, libraries: Library[], previousLibraries: PreviousLibraries<Library> }> {
     constructor(props: any) {
@@ -21,12 +23,15 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
             this.handleNewVariableSubmitted.bind(this);
         this.initializeTestLibraries = this.initializeTestLibraries.bind(this);
         this.saveCurrentLibrary = this.saveCurrentLibrary.bind(this);
+        this.showLatex = this.showLatex.bind(this);
         this.state = {
             totalLines: 0,
             libraries: [],
             previousLibraries: new PreviousLibraries<Library>()
         };
         this.initializeTestLibraries();
+
+       
     }
 
     initializeTestLibraries() {
@@ -91,10 +96,18 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         this.state.previousLibraries.push(JSON.parse(JSON.stringify(this.state.libraries[0])));
         this.state.libraries[0].versionNumber = this.state.libraries[0].versionNumber + 1
         this.setState({
+
             previousLibraries : this.state.previousLibraries,
             libraries:this.state.libraries
             
         })
+    }
+    showLatex(){
+
+        let doc:Document = LatexGenerator.createTestDocument("Test Title","Test Author",this.state.libraries[0])
+
+    
+        PDFGenerator.savePdf(doc)
     }
 
     handleNewVariableSubmitted(
@@ -141,6 +154,9 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
                 </Stack>
                 <Button id="fabButton" variant="success" type="button" onClick={this.saveCurrentLibrary}>
                     Save Current Library
+                </Button>
+                <Button variant ="success" id="fabButtonTwo" type="button" onClick={this.showLatex}>
+                    Show Current Latex
                 </Button>
 
             </Container>
