@@ -8,6 +8,7 @@ export class Library {
     subRoutines: SubRoutine[];
     subRoutineNames: Map<string, number>;
     variables: Map<string, number>;
+    versionNumber:number;
     /*
     @param libraryName lists the library name
     @param codeBlocks contains the codeblocks not included in any subroutines, i.e. at the top of the library.
@@ -16,9 +17,10 @@ export class Library {
     @param variables is a dictionary of all the variables within the library.
 
     */
-    constructor(libraryName: string, libraryCodeBlocks: CodeBlock[]) {
+    constructor(libraryName: string, versionNumber:number,libraryCodeBlocks: CodeBlock[]) {
         this.name = libraryName;
         this.codeBlocks = libraryCodeBlocks;
+        this.versionNumber=versionNumber;
         this.subRoutines = [];
         this.subRoutineNames = new Map<string, number>();
         this.variables = new Map<string, number>();
