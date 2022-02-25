@@ -4,7 +4,7 @@ import { LibraryDisplay } from "./LibraryDisplay";
 import { AddVariable } from "./AddVariable";
 import Stack from "react-bootstrap/Stack";
 import Container from "react-bootstrap/Container";
-import  Col from "react-bootstrap/Col"
+import Col from "react-bootstrap/Col"
 import { typeOfCodeLine } from "../constants/variableAssignmentTypes";
 import { CodeBlock } from "../classes/CodeBlock";
 import { Library } from "../classes/Library";
@@ -14,7 +14,7 @@ import { PreviousLibraries } from "../classes/PreviousLibraries";
 import { PreviousLibrariesDisplay } from "./PreviousLibrariesDisplay";
 import { Button } from "react-bootstrap";
 import { LatexGenerator } from "../classes/LatexGenerator";
-import { PDFGenerator } from "../classes/PDFGenerator";
+import axios from "axios";
 
 export class CodeHolder extends React.Component<{}, { totalLines: number, libraries: Library[], previousLibraries: PreviousLibraries<Library> }> {
     constructor(props: any) {
@@ -24,6 +24,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         this.initializeTestLibraries = this.initializeTestLibraries.bind(this);
         this.saveCurrentLibrary = this.saveCurrentLibrary.bind(this);
         this.showLatex = this.showLatex.bind(this);
+ 
         this.state = {
             totalLines: 0,
             libraries: [],
@@ -31,11 +32,11 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         };
         this.initializeTestLibraries();
 
-       
+
     }
 
     initializeTestLibraries() {
-        let l1: Library = new Library("LibA",1, []);
+        let l1: Library = new Library("LibA", 1, []);
         l1.addSubRoutine(new SubRoutine("LibA", "TestSubRoutine", []));
         l1.addSubRoutine(new SubRoutine("LibA", "TestSubRoutine2", []));
         l1.addCodeBlockToSubRoutine(
@@ -92,23 +93,25 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
     }
 
-    saveCurrentLibrary(){
+    saveCurrentLibrary() {
         this.state.previousLibraries.push(JSON.parse(JSON.stringify(this.state.libraries[0])));
         this.state.libraries[0].versionNumber = this.state.libraries[0].versionNumber + 1
         this.setState({
 
-            previousLibraries : this.state.previousLibraries,
-            libraries:this.state.libraries
-            
+            previousLibraries: this.state.previousLibraries,
+            libraries: this.state.libraries
+
         })
     }
-    showLatex(){
-
-        let doc:Document = LatexGenerator.createTestDocument("Test Title","Test Author",this.state.libraries[0])
-
+    showLatex() {
     
-        PDFGenerator.savePdf(doc)
+      let latex: string = LatexGenerator.createTestLatex("Test Title", "Test Author", this.state.libraries[0])
+      window.open("https://latexonline.cc/compile?text=" + latex);
+        //this.sendLatexToServer(latex)
     }
+
+
+
 
     handleNewVariableSubmitted(
         libraryName: string,
@@ -155,7 +158,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
                 <Button id="fabButton" variant="success" type="button" onClick={this.saveCurrentLibrary}>
                     Save Current Library
                 </Button>
-                <Button variant ="success" id="fabButtonTwo" type="button" onClick={this.showLatex}>
+                <Button variant="success" id="fabButtonTwo" type="button" onClick={this.showLatex}>
                     Show Current Latex
                 </Button>
 
