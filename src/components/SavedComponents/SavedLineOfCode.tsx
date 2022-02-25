@@ -2,7 +2,7 @@
 import * as React from "react";
 import { CodeBlock } from "../../classes/CodeBlock";
 import { typeOfCodeLine, variableAssignmentTypes } from "../../constants/variableAssignmentTypes";
-import "../css/LineOfCode.css"
+import "../../css/LineOfCode.css"
 //displays a single SAVED line of code, i.e. on the left side
 export class SavedLineOfCode extends React.Component<{newProps:any,codeBlock:CodeBlock},{}>{
     
