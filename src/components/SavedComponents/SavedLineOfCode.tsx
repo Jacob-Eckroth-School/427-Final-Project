@@ -1,10 +1,9 @@
 
 import * as React from "react";
-import { CodeBlock } from "../classes/CodeBlock";
-import { typeOfCodeLine, variableAssignmentTypes } from "../constants/variableAssignmentTypes";
+import { CodeBlock } from "../../classes/CodeBlock";
+import { typeOfCodeLine, variableAssignmentTypes } from "../../constants/variableAssignmentTypes";
 import "../css/LineOfCode.css"
-//displays a line of code
-//only prop passed in is "codeString, and key"
+//displays a single SAVED line of code, i.e. on the left side
 export class SavedLineOfCode extends React.Component<{newProps:any,codeBlock:CodeBlock},{}>{
     
 
@@ -12,6 +11,8 @@ export class SavedLineOfCode extends React.Component<{newProps:any,codeBlock:Cod
         super(props);
         this.constructSavedCodeRenderObject = this.constructSavedCodeRenderObject.bind(this);
     }
+
+    //creates the rendered paragraph for the line of code.
     constructSavedCodeRenderObject() {
 
         let codeParagraph:any;  //any because it becomes a big mess of html

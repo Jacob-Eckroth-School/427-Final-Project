@@ -11,11 +11,12 @@ import { Library } from "../classes/Library";
 import { SubRoutine } from "../classes/SubRoutine";
 import { variableAssignmentTypes } from "../constants/variableAssignmentTypes"
 import { PreviousLibraries } from "../classes/PreviousLibraries";
-import { PreviousLibrariesDisplay } from "./PreviousLibrariesDisplay";
+import { PreviousLibrariesDisplay } from "./SavedComponents/PreviousLibrariesDisplay";
 import { Button } from "react-bootstrap";
 import { LatexGenerator } from "../classes/LatexGenerator";
 import axios from "axios";
 
+//the main holder for the library which holds all of the different components
 export class CodeHolder extends React.Component<{}, { totalLines: number, libraries: Library[], previousLibraries: PreviousLibraries<Library> }> {
     constructor(props: any) {
         super(props);
@@ -35,6 +36,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
     }
 
+    //initializes the test libraries, eventually this will be deleted
     initializeTestLibraries() {
         let l1: Library = new Library("LibA", 1, []);
         l1.addSubRoutine(new SubRoutine("LibA", "TestSubRoutine", []));
@@ -93,6 +95,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
     }
 
+    //moves the current library into a list of saved libraries, and displays it on the left side of the screen
     saveCurrentLibrary() {
         this.state.previousLibraries.push(JSON.parse(JSON.stringify(this.state.libraries[0])));
         this.state.libraries[0].versionNumber = this.state.libraries[0].versionNumber + 1
@@ -103,6 +106,8 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
         })
     }
+
+    //Shows the latex code in a PDF format, note: not finished.
     showLatex() {
     
       let latex: string = LatexGenerator.createTestLatex("Test Title", "Test Author", this.state.libraries[0])
@@ -112,7 +117,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
 
 
-
+    //function that is called whenever a new variable is submitted to a LIBRARY
     handleNewVariableSubmitted(
         libraryName: string,
         newVariableName: string,
@@ -127,7 +132,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
             this.state.totalLines.toString()
         );
         var libraryFound = false;
-        for (const lib of this.state.libraries) {
+        for (const lib of this.state.libraries) {   //looking for the library we will be submitting to
             if (lib.name === libraryName) {
                 libraryFound = true;
                 lib.addNewCodeBlock(c);
@@ -142,6 +147,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         }
     }
 
+    //render function
     render() {
         return (
             <Container className="justify-content-between align-items-start">
@@ -151,7 +157,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
                     </Col>
                     <Col sm={8} className="align-self-start" >
                         <h1>Current Library</h1>
-                        <LibraryDisplay library={this.state.libraries[0]} />
+                        <LibraryDisplay library={this.state.libraries[0]} />   
                         <AddVariable submitVariable={this.handleNewVariableSubmitted} />
                     </Col>
                 </Stack>

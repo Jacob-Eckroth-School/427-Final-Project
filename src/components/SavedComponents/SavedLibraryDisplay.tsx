@@ -1,12 +1,12 @@
 import * as React from "react";
 import { Container, Stack } from "react-bootstrap";
 
-import { Library } from "../classes/Library";
+import { Library } from "../../classes/Library";
 
 
 import { SavedSubRoutineDisplay } from "./SavedSubRoutineDisplay";
 import { SavedLineOfCode } from "./SavedLineOfCode";
-//displays a library?
+//displays a saved library
 export class SavedLibraryDisplay extends React.Component<{ library: Library }, { library: Library }>{
 
     constructor(props: any) {
@@ -27,12 +27,12 @@ export class SavedLibraryDisplay extends React.Component<{ library: Library }, {
                 <h4 className="savedLibraryTitle">{this.state.library.name + " #" + this.state.library.versionNumber.toString()}</h4>
                 <Container className="p-1 border border-dark">
                     <Stack>
-                        {this.state.library.codeBlocks.map((codeBlock) => (
+                        {this.state.library.codeBlocks.map((codeBlock) => ( //renders every code block in the library that is not in a subroutine
                             <SavedLineOfCode key={codeBlock.key} codeBlock={codeBlock} newProps={[]}/>
                         ))}
                     </Stack>
 
-                    {this.state.library.subRoutines.map((subRoutine) =>
+                    {this.state.library.subRoutines.map((subRoutine) => //renders every subroutine in the library
                        
 
                             <SavedSubRoutineDisplay key={subRoutine.name} subRoutine={subRoutine} />
