@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, Container, Stack} from "react-bootstrap";
-import { Library } from "../classes/Library";
-import { PreviousLibraries } from "../classes/PreviousLibraries";
+import { Library } from "../../classes/Library";
+import { PreviousLibraries } from "../../classes/PreviousLibraries";
 
 import { SavedLibraryDisplay } from "./SavedLibraryDisplay";
 
@@ -20,6 +20,7 @@ export class PreviousLibrariesDisplay extends React.Component<{previousLibraries
     }
 
 
+    //deletes a saved library
     deleteSavedLibraryAt(index:number){
         this.state.previousLibraries.remove(index);
         this.setState({
@@ -27,6 +28,7 @@ export class PreviousLibrariesDisplay extends React.Component<{previousLibraries
         })
     }
 
+    //creates the list of libraries to display
     createLibrariesRenderObject():any{
         
         var smallLibraryDisplays:any = []

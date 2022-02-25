@@ -5,8 +5,12 @@ import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import { variableAssignmentTypes } from "../constants/variableAssignmentTypes";
 
+
+
+//component that allows user to input a variable and add it to a library
 export class AddVariable extends React.Component<{submitVariable:Function},{variableName:string,variableAssignment:string,variableAssignmentType:number}> {
 
+    //constructor
   constructor(props:any) {
     super(props);
     this.state = {
@@ -22,6 +26,8 @@ export class AddVariable extends React.Component<{submitVariable:Function},{vari
     this.handleVariableValueChange = this.handleVariableValueChange.bind(this);
   }
 
+
+  //handles keydowns for the form
   handleKeyDown(e:any, callback:Function) {
     if (e.key === "Enter" && e.shiftKey === false) {
       e.preventDefault();
@@ -29,15 +35,18 @@ export class AddVariable extends React.Component<{submitVariable:Function},{vari
     }
   }
 
+
+//handles when the variable NAMe is changed, i.e A = 123, A is the variable name
   handleVariableNameChange(event:any) {
    
     this.setState({ variableName: event.target.value });
   }
+  //event handler for when variable VALUE is changed, i.e. A=123, 123 is the variable value
   handleVariableValueChange(event:any){
       this.setState({variableAssignment:event.target.value})
   }
  
-
+  //event handler for when user presses submit variable, calls parent submit variable function
   submitVariable() {
     this.props.submitVariable(
         "LibA",
@@ -45,9 +54,10 @@ export class AddVariable extends React.Component<{submitVariable:Function},{vari
         this.state.variableAssignmentType,
         this.state.variableAssignment
     );
-    (document.getElementById("variableForm") as HTMLFormElement).reset();
+    (document.getElementById("variableForm") as HTMLFormElement).reset();   //clears the form
   }
 
+  //triggered when the user pressed the {0,1}^lambda button, updates the type of variable the user is assigning
   lambdaStringChosen() {
    
       this.setState({
@@ -55,6 +65,8 @@ export class AddVariable extends React.Component<{submitVariable:Function},{vari
       });
       
   }
+
+  //triggered when user chooses to enter their own variable value.
   userEnteredVariableChosen() {
    
     this.setState({
@@ -101,7 +113,7 @@ export class AddVariable extends React.Component<{submitVariable:Function},{vari
             
           </ToggleButtonGroup>
          
-          <Form.Control
+          <Form.Control //we only show this control if the user assignment type is USER_INPUTTED_VALUE
             type="text"
             placeholder="Variable Value"
             onChange={this.handleVariableValueChange}

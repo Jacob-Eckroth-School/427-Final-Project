@@ -6,7 +6,7 @@ import Container from "react-bootstrap/Container";
 import {SubRoutine} from "../classes/SubRoutine";
 
 
-//displays a library?
+//displays a sub routine within a library
 export class SubRoutineDisplay extends React.Component<{subRoutine:SubRoutine},{subRoutine:SubRoutine}> {
 
     constructor(props:any) {
@@ -26,7 +26,8 @@ export class SubRoutineDisplay extends React.Component<{subRoutine:SubRoutine},{
             <Stack>
                 <h2 className="subRoutineTitle">{this.state.subRoutine.name + '():'}</h2>
                 <Container className="px-3">
-                    <List
+                    <List   //renders all of the lines of code stored within the subroutine
+                            //LIST is a draggable list :)
                         values={this.state.subRoutine.code}
                         onChange={({ oldIndex, newIndex }) => {
                             this.state.subRoutine.updateItemOrder(oldIndex, newIndex)
