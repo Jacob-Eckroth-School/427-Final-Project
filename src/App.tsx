@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {CodeHolder} from './components/CodeHolder';
 
-import {Header}  from './components/Header';
+import {Header}  from './components/UIComponents/Header';
 import './css/App.css';
 
 
