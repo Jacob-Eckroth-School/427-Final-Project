@@ -1,3 +1,4 @@
+import { typeOfCodeLine, variableAssignmentTypes } from "../constants/variableAssignmentTypes"
 import { CodeBlock } from "./CodeBlock"
 import { Library } from "./Library"
 import { SubRoutine } from "./SubRoutine"
@@ -182,6 +183,7 @@ export abstract class LatexGenerator {
             + LatexGenerator.generateTitleLatex(title)
             + LatexGenerator.generateStartDocumentLatex()
             + LatexGenerator.generateLibraryLatex(library)
+            + LatexGenerator.generateLibraryLatex(library)
             + LatexGenerator.postfix
 
         return encodeURIComponent(latex);   //encodeURIComponent is to convert the scary characters to friendly characters
@@ -192,22 +194,56 @@ export abstract class LatexGenerator {
 
 
     public static generateLibraryLatex(library: Library): string {
-        return `    \\[\n`
-            + `            \\titlecodebox{$${library.name}$}{\n`
-            + `                $k \\gets \\Sigma.\\KeyGen$ \\\\[8pt]\n\n`
-            + `                \\underline{$\\subname{challenge}(m_L, m_R)$:} \\\\\n`
-            + `                \\> $c := \\Sigma.\\Enc(k,\\mathhighlight{m_L})$ \\\\\n`
-            + `                \\> return $c$\n`
-            + `            }\n`
-            + `    \\]\n`
-            + `%\n`
+        var latex:string =  `    \\[\n`
+        + `            \\titlecodebox{$${library.name}$}{\n`
+
+        var codeBlockLatex:string ="";
+        for(const codeBlock of library.codeBlocks){
+       
+            codeBlockLatex += LatexGenerator.generateCodeBlockLatex(codeBlock)
+         
+        }
+        var subRoutineLatex:string = "";
+        for(const subRoutine of library.subRoutines){
+            subRoutineLatex += LatexGenerator.generateSubRoutineLatex(subRoutine);
+        }
+
+
+
+
+        //the latex that goes at the end of the library
+        var postLatex = 
+         `            }\n`
+        + `    \\]\n`
+        + `%\n`
+
+
+        return latex + codeBlockLatex + subRoutineLatex + postLatex
 
 
     }
+
+    //TODO: implement inputs to sub routine
     public static generateSubRoutineLatex(subRoutine: SubRoutine): string {
-        return ""
+        var subRoutineTitle:string = `\\underline{$\\subname{${subRoutine.name}}()$:} \\\\\n`
+        var codeBlockLatex:string ="";
+        for(const codeBlock of subRoutine.codeBlocks){
+            codeBlockLatex += "\\>" + LatexGenerator.generateCodeBlockLatex(codeBlock) + "\n"
+        }
+        return subRoutineTitle + codeBlockLatex;
+
+
+
     }
     public static generateCodeBlockLatex(codeBlock: CodeBlock): string {
+        if(codeBlock.type === typeOfCodeLine.VARIABLE_ASSIGNMENT){
+            //if it's a lambda string
+            if(codeBlock.variableAssignmentType === variableAssignmentTypes.LAMBDA_LENGTH_STRING){
+                return `$${codeBlock.variableName} \\gets \\{0,1\\}^{\\lambda}$\\\\\n`;
+            }else if(codeBlock.variableAssignmentType === variableAssignmentTypes.USER_INPUTED_VALUE){
+                return `$${codeBlock.variableName} := ${codeBlock.variableAssignment}$\\\\\n`;
+            }
+        }
         return ""
     }
 }

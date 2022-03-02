@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { LibraryDisplay } from "./LibraryDisplay";
-import { AddVariable } from "./AddVariable";
+import { AddAFeature } from "./AddAFeature";
 import Stack from "react-bootstrap/Stack";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col"
@@ -41,6 +41,24 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         let l1: Library = new Library("LibA", 1, []);
         l1.addSubRoutine(new SubRoutine("LibA", "TestSubRoutine", []));
         l1.addSubRoutine(new SubRoutine("LibA", "TestSubRoutine2", []));
+        l1.addNewCodeBlock(
+            new CodeBlock(
+                typeOfCodeLine.VARIABLE_ASSIGNMENT,
+                "a",
+                variableAssignmentTypes.LAMBDA_LENGTH_STRING,
+                '',
+                'KEY1'
+            )
+        )
+        l1.addNewCodeBlock(
+            new CodeBlock(
+                typeOfCodeLine.VARIABLE_ASSIGNMENT,
+                "b",
+                variableAssignmentTypes.USER_INPUTED_VALUE,
+                '123',
+                'KEY2'
+            )
+        )
         l1.addCodeBlockToSubRoutine(
             new CodeBlock(
                 typeOfCodeLine.VARIABLE_ASSIGNMENT,
@@ -158,7 +176,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
                     <Col sm={8} className="align-self-start" >
                         <h1>Current Library</h1>
                         <LibraryDisplay library={this.state.libraries[0]} />   
-                        <AddVariable submitVariable={this.handleNewVariableSubmitted} />
+                        <AddAFeature submitVariable={this.handleNewVariableSubmitted} />
                     </Col>
                 </Stack>
                 <Button id="fabButton" variant="success" type="button" onClick={this.saveCurrentLibrary}>
