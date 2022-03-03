@@ -32,6 +32,8 @@ export class AddAFeature extends React.Component<{ submitVariable: Function }, {
     this.createAddSubRoutineForm = this.createAddSubRoutineForm.bind(this);
     this.selectAddVariable = this.selectAddVariable.bind(this);
     this.selectAddSubRoutine = this.selectAddSubRoutine.bind(this);
+    this.handleSubRoutineNameChange = this.handleSubRoutineNameChange.bind(this)
+    this.submitSubRoutine = this.submitSubRoutine.bind(this);
   }
 
 
@@ -49,6 +51,11 @@ export class AddAFeature extends React.Component<{ submitVariable: Function }, {
 
     this.setState({ variableName: event.target.value });
   }
+
+  handleSubRoutineNameChange(){
+
+  }
+
   //event handler for when variable VALUE is changed, i.e. A=123, 123 is the variable value
   handleVariableValueChange(event: any) {
     this.setState({ variableAssignment: event.target.value })
@@ -63,6 +70,10 @@ export class AddAFeature extends React.Component<{ submitVariable: Function }, {
       this.state.variableAssignment
     );
     (document.getElementById("variableForm") as HTMLFormElement).reset();   //clears the form
+  }
+
+  submitSubRoutine(){
+    
   }
 
   //triggered when the user pressed the {0,1}^lambda button, updates the type of variable the user is assigning
@@ -156,7 +167,60 @@ export class AddAFeature extends React.Component<{ submitVariable: Function }, {
     </Form>
   }
   createAddSubRoutineForm() {
-    return <div>Sub Routine Time Baby</div>
+    return <Form
+      id="variableForm"
+      onKeyDown={(e) => {
+        this.handleKeyDown(e, this.submitSubRoutine);
+      }}
+    >
+
+      <Form.Group className="mb-3">
+        <Form.Label>Add a subroutine</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Subroutine Name"
+          onChange={this.handleSubRoutineNameChange}
+        />
+        <Form.Text className="text-muted">
+          This must be a unique subroutine name
+        </Form.Text>
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <ToggleButtonGroup type="radio" name="options" defaultValue={1}>
+          <ToggleButton
+            id="tbg-radio-1"
+            value={1}
+            onClick={this.lambdaStringChosen}
+          >
+            &#123;0,1&#125;
+            <sup>λ</sup>
+          </ToggleButton>
+          <ToggleButton
+            id="tbg-radio-2"
+            value={2}
+            onClick={this.userEnteredVariableChosen}
+          >
+            Input Value:
+          </ToggleButton>
+
+        </ToggleButtonGroup>
+
+        <Form.Control //we only show this control if the user assignment type is USER_INPUTTED_VALUE
+          type="text"
+          placeholder="Variable Value"
+          onChange={this.handleVariableValueChange}
+          hidden={this.state.variableAssignmentType === variableAssignmentTypes.USER_INPUTED_VALUE ? false : true}
+        />
+        <Form.Text className="text-muted"
+          hidden={this.state.variableAssignmentType === variableAssignmentTypes.USER_INPUTED_VALUE ? false : true}>
+          Assign a value to this variable.
+        </Form.Text>
+      </Form.Group>
+
+      <Button variant="primary" type="button" onClick={this.submitVariable}>
+        Submit
+      </Button>
+    </Form>
   }
 
   createDropDownSelector() {
