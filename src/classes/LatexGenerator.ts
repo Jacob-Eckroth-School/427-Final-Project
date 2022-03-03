@@ -183,7 +183,7 @@ export abstract class LatexGenerator {
             + LatexGenerator.generateTitleLatex(title)
             + LatexGenerator.generateStartDocumentLatex()
             + LatexGenerator.generateLibraryLatex(library)
-            + LatexGenerator.generateLibraryLatex(library)
+            + LatexGenerator.generateLibraryLatex(library)  
             + LatexGenerator.postfix
 
         return encodeURIComponent(latex);   //encodeURIComponent is to convert the scary characters to friendly characters
