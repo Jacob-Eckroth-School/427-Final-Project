@@ -52,12 +52,13 @@ export class Library {
         this.subRoutines.push(newSubRoutine);
     }
 
-    addNewCodeBlock(newCodeBlock: CodeBlock) {
-        if (newCodeBlock.type === typeOfCodeLine.VARIABLE_ASSIGNMENT) {
+     addNewCodeBlock(newCodeBlock: CodeBlock) {
+        if (newCodeBlock.type === typeOfCodeLine.VARIABLE_ASSIGNMENT && !this.variables.has(newCodeBlock.variableName)) {
             this.variables.set(newCodeBlock.variableName,1);
-            //TODO: make it so you can't overwrite an existing variable
+            this.codeBlocks.push(newCodeBlock)
         }
-        this.codeBlocks.push(newCodeBlock)
+        else if (this.variables.has(newCodeBlock.variableName))
+            alert("This variable has already been used. Please pick another name")
     }
 }
 
