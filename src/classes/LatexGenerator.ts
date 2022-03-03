@@ -3,7 +3,6 @@ import { CodeBlock } from "./CodeBlock"
 import { Library } from "./Library"
 import { SubRoutine } from "./SubRoutine"
 
-const { parse, HtmlGenerator } = require('latex.js')
 
 //this class is abstract, meaning it cannot be extansiated, you can just call the functions of it. Via LatexGenerator.xxx
 export abstract class LatexGenerator {
