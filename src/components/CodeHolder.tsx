@@ -22,10 +22,11 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         super(props);
         this.handleNewVariableSubmitted =
             this.handleNewVariableSubmitted.bind(this);
+        this.handleNewSubRoutineSubmitted = this.handleNewSubRoutineSubmitted.bind(this);
         this.initializeTestLibraries = this.initializeTestLibraries.bind(this);
         this.saveCurrentLibrary = this.saveCurrentLibrary.bind(this);
         this.showLatex = this.showLatex.bind(this);
- 
+
         this.state = {
             totalLines: 0,
             libraries: [],
@@ -39,74 +40,11 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
     //initializes the test libraries, eventually this will be deleted
     initializeTestLibraries() {
         let l1: Library = new Library("LibA", 1, []);
-        l1.addSubRoutine(new SubRoutine("LibA", "TestSubRoutine", []));
-        l1.addSubRoutine(new SubRoutine("LibA", "TestSubRoutine2", []));
-        l1.addNewCodeBlock(
-            new CodeBlock(
-                typeOfCodeLine.VARIABLE_ASSIGNMENT,
-                "a",
-                variableAssignmentTypes.LAMBDA_LENGTH_STRING,
-                '',
-                'KEY1'
-            )
-        )
-        l1.addNewCodeBlock(
-            new CodeBlock(
-                typeOfCodeLine.VARIABLE_ASSIGNMENT,
-                "b",
-                variableAssignmentTypes.USER_INPUTED_VALUE,
-                '123',
-                'KEY2'
-            )
-        )
-        l1.addCodeBlockToSubRoutine(
-            new CodeBlock(
-                typeOfCodeLine.VARIABLE_ASSIGNMENT,
-                "a",
-                variableAssignmentTypes.LAMBDA_LENGTH_STRING,
-                '',
-                'KEY1'
-            ),
-            "TestSubRoutine"
-        );
-        this.setState({
-            totalLines: this.state.totalLines + 1,  //TODO: get a beter way of assigning keys lol
-        });
-
-        l1.addCodeBlockToSubRoutine(
-            new CodeBlock(
-                typeOfCodeLine.VARIABLE_ASSIGNMENT,
-                "b",
-                variableAssignmentTypes.USER_INPUTED_VALUE,
-                '25',
-                'KEY2'
-            ),
-            "TestSubRoutine"
-        );
-        this.setState({
-            totalLines: this.state.totalLines + 1,  //TODO: get a beter way of assigning keys lol
-        });
-
-        l1.addCodeBlockToSubRoutine(
-            new CodeBlock(
-                typeOfCodeLine.VARIABLE_ASSIGNMENT,
-                "c",
-                variableAssignmentTypes.USER_INPUTED_VALUE,
-                "Hello World",
-                'KEY2'
-            ),
-            "TestSubRoutine2"
-        );
-        this.setState({
-            totalLines: this.state.totalLines + 1,  //TODO: get a beter way of assigning keys lol
-        });
-
         this.state.libraries.push(l1);
-        this.saveCurrentLibrary();
-        this.saveCurrentLibrary();
+      
         this.setState({
             libraries: this.state.libraries,
-            previousLibraries: this.state.previousLibraries
+           
 
         });
 
@@ -127,9 +65,9 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
     //Shows the latex code in a PDF format, note: not finished.
     showLatex() {
-    
-      let latex: string = LatexGenerator.createTestLatex("Test Title", "Test Author", this.state.libraries[0])
-      window.open("https://latexonline.cc/compile?text=" + latex);
+
+        let latex: string = LatexGenerator.createTestLatex("Test Title", "Test Author", this.state.libraries[0])
+        window.open("https://latexonline.cc/compile?text=" + latex);
         //this.sendLatexToServer(latex)
     }
 
@@ -165,18 +103,41 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         }
     }
 
+    handleNewSubRoutineSubmitted(
+        libraryName: string,
+        subRoutineName: string,
+        subRoutineParameters: string[]
+    ) {
+
+        let s:SubRoutine = new SubRoutine(libraryName,subRoutineName,[],subRoutineParameters);
+        var libraryFound = false;
+        for (const lib of this.state.libraries) {   //looking for the library we will be submitting to
+            if (lib.name === libraryName) {
+                libraryFound = true;
+                lib.addSubRoutine(s);
+                this.setState({
+                    libraries:this.state.libraries
+                })
+                break;
+            }
+        }
+        if (libraryFound === false) {
+            alert(`Did not find a library with name ${libraryName}`);
+        }
+    }
+
     //render function
     render() {
         return (
             <Container className="justify-content-between align-items-start">
-                <Stack direction="horizontal">
+                <Stack direction="horizontal" className="align-items-start">
                     <Col sm={4}>
                         <PreviousLibrariesDisplay previousLibraries={this.state.previousLibraries} />
                     </Col>
                     <Col sm={8} className="align-self-start" >
                         <h1>Current Library</h1>
-                        <LibraryDisplay library={this.state.libraries[0]} />   
-                        <AddAFeature submitVariable={this.handleNewVariableSubmitted} />
+                        <LibraryDisplay library={this.state.libraries[0]} />
+                        <AddAFeature submitVariable={this.handleNewVariableSubmitted} submitSubRoutine={this.handleNewSubRoutineSubmitted} />
                     </Col>
                 </Stack>
                 <Button id="fabButton" variant="success" type="button" onClick={this.saveCurrentLibrary}>

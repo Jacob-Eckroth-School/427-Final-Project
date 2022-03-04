@@ -7,17 +7,20 @@ export class SubRoutine{
     name: string;
     codeBlocks: CodeBlock[];
     variables: Map<string,number>;
+    parameters:string[];
 
     /*
     @param libraryName lists what library the subroutine is in
     @param subRoutineName is the name of this library.
     @param subRoutineCodeBlocks is a list of type CodeBlock
     */
-    constructor(libraryName:string,subRoutineName:string,subRoutineCodeBlocks:CodeBlock[]){
+    constructor(libraryName:string,subRoutineName:string,subRoutineCodeBlocks:CodeBlock[],parameters:string[]){
         this.libraryName = libraryName;
         this.name=subRoutineName;
         this.codeBlocks = subRoutineCodeBlocks;
         this.variables = new Map<string,number>()
+        this.parameters = parameters;
+
     }
 
 
