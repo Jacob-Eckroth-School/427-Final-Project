@@ -1,6 +1,7 @@
 import { typeOfCodeLine, variableAssignmentTypes } from "../constants/variableAssignmentTypes"
 import { CodeBlock } from "./CodeBlock"
 import { Library } from "./Library"
+import { PreviousLibraries } from "./PreviousLibraries"
 import { SubRoutine } from "./SubRoutine"
 
 
@@ -189,8 +190,30 @@ export abstract class LatexGenerator {
 
     }
 
+    public static createFullLatex(title: string, author: string,previousLibraries:PreviousLibraries<[Library,string]>):string{
+        let latex: string = LatexGenerator.getPrefix()
+        + LatexGenerator.getApiGarbage()
+        + LatexGenerator.generateMikeCommandsLatex()
+        + LatexGenerator.generateAuthorLatex(author)
+        + LatexGenerator.generateDateLatex()
+        + LatexGenerator.generateTitleLatex(title)
+        + LatexGenerator.generateStartDocumentLatex()
+        + LatexGenerator.generateSavedLibrariesLatex(previousLibraries)
+        + LatexGenerator.postfix
+
+    return encodeURIComponent(latex);   //encodeURIComponent is to convert the scary characters to friendly characters
+    }
 
 
+
+    public static generateSavedLibrariesLatex(previousLibraries:PreviousLibraries<[Library,string]>):string{
+        var latex:string = "";
+        for(var i = 0; i < previousLibraries.size(); i++){
+            latex += `\\begin{center}\n${previousLibraries.at(i).at(1) as string}\n\\end{center}\n` //adding the reason for the library change
+            latex += this.generateLibraryLatex(previousLibraries.at(i).at(0) as Library);
+        }
+        return latex
+    }
 
     public static generateLibraryLatex(library: Library): string {
         var latex:string =  `    \\[\n`
