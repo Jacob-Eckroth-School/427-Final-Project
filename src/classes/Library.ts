@@ -48,8 +48,14 @@ export class Library {
     }
 
     addSubRoutine(newSubRoutine: SubRoutine) {
-        this.subRoutineNames.set(newSubRoutine.name,1);//set it to 1 if it exists
-        this.subRoutines.push(newSubRoutine);
+      
+        if(!this.subRoutineNames.has(newSubRoutine.name)){
+            this.subRoutineNames.set(newSubRoutine.name,1);//set it to 1 if it exists
+            this.subRoutines.push(newSubRoutine);
+            
+        }else{
+            alert("This subroutine name has already been used. Please pick another name.")
+        }
     }
 
      addNewCodeBlock(newCodeBlock: CodeBlock) {
