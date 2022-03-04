@@ -6,7 +6,7 @@ import { SubRoutine } from "./SubRoutine"
 
 //this class is abstract, meaning it cannot be extansiated, you can just call the functions of it. Via LatexGenerator.xxx
 export abstract class LatexGenerator {
-    public static testLatex: string = "Hi, this is a line of text"
+ 
 
     private static getPrefix(): string {
         return "\\documentclass[]{article}\n"
@@ -224,7 +224,9 @@ export abstract class LatexGenerator {
 
     //TODO: implement inputs to sub routine
     public static generateSubRoutineLatex(subRoutine: SubRoutine): string {
-        var subRoutineTitle:string = `\\underline{$\\subname{${subRoutine.name}}()$:} \\\\\n`
+        var parameters:string = SubRoutine.generateParametersString(subRoutine.parameters);
+       
+        var subRoutineTitle:string = `\\underline{$\\subname{${subRoutine.name}}(`+parameters+`)$:} \\\\\n`
         var codeBlockLatex:string ="";
         for(const codeBlock of subRoutine.codeBlocks){
             codeBlockLatex += "\\>" + LatexGenerator.generateCodeBlockLatex(codeBlock) + "\n"
