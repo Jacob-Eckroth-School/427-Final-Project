@@ -7,13 +7,14 @@ import { SavedLibraryDisplay } from "./SavedLibraryDisplay";
 
 
 
-export class PreviousLibrariesDisplay extends React.Component<{previousLibraries:PreviousLibraries<Library>},{previousLibraries:PreviousLibraries<Library>}> {
+export class PreviousLibrariesDisplay extends React.Component<{previousLibraries:PreviousLibraries<[Library,string]>},{previousLibraries:PreviousLibraries<[Library,string]>}> {
 
 
     constructor(props:any){
         super(props);
         this.state={
-            previousLibraries:this.props.previousLibraries
+            previousLibraries:this.props.previousLibraries,
+           
         }
         this.deleteSavedLibraryAt = this.deleteSavedLibraryAt.bind(this);
         this.createLibrariesRenderObject = this.createLibrariesRenderObject.bind(this);
@@ -34,9 +35,11 @@ export class PreviousLibrariesDisplay extends React.Component<{previousLibraries
         var smallLibraryDisplays:any = []
         for(let i = this.state.previousLibraries.size()-1; i >=0; i--){
             smallLibraryDisplays.push(
-                <Stack key={this.state.previousLibraries.at(i).name + this.state.previousLibraries.at(i).versionNumber.toString()}>
+                <Stack key={(this.state.previousLibraries.at(i).at(0) as Library).name + (this.state.previousLibraries.at(i).at(0) as Library).versionNumber.toString()}>
+                   
                     <SavedLibraryDisplay
-                    library={this.state.previousLibraries.at(i)}/>
+                    library={this.state.previousLibraries.at(i).at(0) as Library}/>
+                     <p className="reasonForSavingLibrary">{this.state.previousLibraries.at(i).at(1) as string}</p>
                     <Button className="px-0 mx-0" variant="danger" onClick = {()=>this.deleteSavedLibraryAt(i)}>Delete saved library</Button>
                 </Stack>
                

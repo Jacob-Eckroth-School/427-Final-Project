@@ -17,7 +17,7 @@ import { LatexGenerator } from "../classes/LatexGenerator";
 import axios from "axios";
 
 //the main holder for the library which holds all of the different components
-export class CodeHolder extends React.Component<{}, { totalLines: number, libraries: Library[], previousLibraries: PreviousLibraries<Library> }> {
+export class CodeHolder extends React.Component<{}, { totalLines: number, libraries: Library[], previousLibraries: PreviousLibraries<[Library,string]> }> {
     constructor(props: any) {
         super(props);
         this.handleNewVariableSubmitted =
@@ -30,7 +30,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         this.state = {
             totalLines: 0,
             libraries: [],
-            previousLibraries: new PreviousLibraries<Library>()
+            previousLibraries: new PreviousLibraries<[Library,string]>()
         };
         this.initializeTestLibraries();
 
@@ -53,7 +53,9 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
     //moves the current library into a list of saved libraries, and displays it on the left side of the screen
     saveCurrentLibrary() {
-        this.state.previousLibraries.push(JSON.parse(JSON.stringify(this.state.libraries[0])));
+        var reasonForSaving:string = prompt("Please enter the motivation behind saving this library, i.e. `inlined subroutine into library`","No Reason Given");
+        //push a tuple with reasonForSaving added so it can be displayed in latex.
+        this.state.previousLibraries.push([JSON.parse(JSON.stringify(this.state.libraries[0])),reasonForSaving]);
         this.state.libraries[0].versionNumber = this.state.libraries[0].versionNumber + 1
         this.setState({
 
@@ -66,7 +68,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
     //Shows the latex code in a PDF format, note: not finished.
     showLatex() {
 
-        let latex: string = LatexGenerator.createTestLatex("Test Title", "Test Author", this.state.libraries[0])
+        let latex: string = LatexGenerator.createFullLatex("Test Title", "Test Author", this.state.previousLibraries)
         window.open("https://latexonline.cc/compile?text=" + latex);
         //this.sendLatexToServer(latex)
     }
