@@ -26,6 +26,8 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         this.initializeTestLibraries = this.initializeTestLibraries.bind(this);
         this.saveCurrentLibrary = this.saveCurrentLibrary.bind(this);
         this.showLatex = this.showLatex.bind(this);
+        this.newLibraryNameSet = this.newLibraryNameSet.bind(this);
+        this.copyCurrentLatexToClipboard = this.copyCurrentLatexToClipboard.bind(this);
 
         this.state = {
             totalLines: 0,
@@ -39,18 +41,20 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
     //initializes the test libraries, eventually this will be deleted
     initializeTestLibraries() {
-        let l1: Library = new Library("LibA", 1, []);
+        let l1: Library = new Library("Example Library", 1, []);
         this.state.libraries.push(l1);
       
         this.setState({
             libraries: this.state.libraries,
-           
-
         });
 
 
     }
-
+    newLibraryNameSet(){
+        this.setState({
+            libraries: this.state.libraries,
+        });
+    }
     //moves the current library into a list of saved libraries, and displays it on the left side of the screen
     saveCurrentLibrary() {
         var reasonForSaving:string = prompt("Please enter the motivation behind saving this library, i.e. `inlined subroutine into library`","No Reason Given");
@@ -128,6 +132,11 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         }
     }
 
+    copyCurrentLatexToClipboard(){
+        navigator.clipboard.writeText(LatexGenerator.createFullLatexNoURI("Test Title", "Test Author", this.state.previousLibraries));
+        alert("Previous Libraries Latex has been copied to clipboard. Paste it into a .tex file to see the result.")
+    }
+
     //render function
     render() {
         return (
@@ -138,15 +147,19 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
                     </Col>
                     <Col sm={8} className="align-self-start" >
                         <h1>Current Library</h1>
-                        <LibraryDisplay library={this.state.libraries[0]} />
-                        <AddAFeature submitVariable={this.handleNewVariableSubmitted} submitSubRoutine={this.handleNewSubRoutineSubmitted} />
+                        <LibraryDisplay library={this.state.libraries[0]} notifyNewLibraryName={this.newLibraryNameSet} />
+                        <AddAFeature libraryName={this.state.libraries[0].name} submitVariable={this.handleNewVariableSubmitted} submitSubRoutine={this.handleNewSubRoutineSubmitted} />
                     </Col>
                 </Stack>
                 <Button id="fabButton" variant="success" type="button" onClick={this.saveCurrentLibrary}>
                     Save Current Library
                 </Button>
+              
                 <Button variant="success" id="fabButtonTwo" type="button" onClick={this.showLatex}>
-                    Show Current Latex
+                    Show Previous Libraries Latex
+                </Button>
+                <Button id="fabButtonThree" variant="success" type="button" onClick={this.copyCurrentLatexToClipboard}>
+                    Copy Previous Libraries Latex <i className="fa fa-files-o" aria-hidden="true"/>
                 </Button>
 
             </Container>

@@ -190,6 +190,18 @@ export abstract class LatexGenerator {
 
     }
 
+    public static createFullLatexNoURI(title: string, author: string,previousLibraries:PreviousLibraries<[Library,string]>):string{
+        let latex: string = LatexGenerator.getPrefix()
+        + LatexGenerator.getApiGarbage()
+        + LatexGenerator.generateMikeCommandsLatex()
+        + LatexGenerator.generateAuthorLatex(author)
+        + LatexGenerator.generateDateLatex()
+        + LatexGenerator.generateTitleLatex(title)
+        + LatexGenerator.generateStartDocumentLatex()
+        + LatexGenerator.generateSavedLibrariesLatex(previousLibraries)
+        + LatexGenerator.postfix
+        return latex;
+    }
     public static createFullLatex(title: string, author: string,previousLibraries:PreviousLibraries<[Library,string]>):string{
         let latex: string = LatexGenerator.getPrefix()
         + LatexGenerator.getApiGarbage()
