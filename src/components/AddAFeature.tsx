@@ -10,7 +10,7 @@ import { DropdownButton } from "react-bootstrap";
 import { Stack } from "react-bootstrap";
 
 //component that allows user to input a new thing and add it to a library
-export class AddAFeature extends React.Component<{ submitVariable: Function, submitSubRoutine: Function }, { subRoutineName: string, subRoutineVariableNames: Map<number, string>, amountOfParameters: number, variableName: string, variableAssignment: string, variableAssignmentType: number, addSubRoutineSelected: boolean, addVariableSelected: boolean }> {
+export class AddAFeature extends React.Component<{ libraryName:string,submitVariable: Function, submitSubRoutine: Function }, { subRoutineName: string, subRoutineVariableNames: Map<number, string>, amountOfParameters: number, variableName: string, variableAssignment: string, variableAssignmentType: number, addSubRoutineSelected: boolean, addVariableSelected: boolean }> {
 
   //constructor
   constructor(props: any) {
@@ -84,7 +84,7 @@ export class AddAFeature extends React.Component<{ submitVariable: Function, sub
   //event handler for when user presses submit variable, calls parent submit variable function
   submitVariable() {
     this.props.submitVariable(
-      "LibA",
+      this.props.libraryName,
       this.state.variableName,
       this.state.variableAssignmentType,
       this.state.variableAssignment
@@ -113,7 +113,7 @@ export class AddAFeature extends React.Component<{ submitVariable: Function, sub
       subRoutineNames.push(this.state.subRoutineVariableNames.get(i))
     }
     this.props.submitSubRoutine(
-      "LibA",
+      this.props.libraryName,
       this.state.subRoutineName,
       subRoutineNames
     )

@@ -24,7 +24,7 @@ export class SavedLibraryDisplay extends React.Component<{ library: Library }, {
     render() {
         return (
             <Stack>
-                <h4 className="savedLibraryTitle">{this.state.library.name + " #" + this.state.library.versionNumber.toString()}</h4>
+                <h4 className="savedLibraryTitle">{this.state.library.name + " Lib #" + this.state.library.versionNumber.toString()}</h4>
                 <Container className="p-1 border border-dark">
                     <Stack>
                         {this.state.library.codeBlocks.map((codeBlock) => ( //renders every code block in the library that is not in a subroutine
