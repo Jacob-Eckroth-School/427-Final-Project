@@ -81,10 +81,11 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
     //function that is called whenever a new variable is submitted to a LIBRARY
     handleNewVariableSubmitted(
-        libraryName: string,
+        
         newVariableName: string,
         newVariableAssignmentType: number,
-        newVariableAssignment: string
+        newVariableAssignment: string,
+        destination:string
     ) {
         let c = new CodeBlock(
             typeOfCodeLine.VARIABLE_ASSIGNMENT,
@@ -93,9 +94,11 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
             newVariableAssignment,
             this.state.totalLines.toString()
         );
+
         var libraryFound = false;
+    
         for (const lib of this.state.libraries) {   //looking for the library we will be submitting to
-            if (lib.name === libraryName) {
+            if (lib.name === destination) {
                 libraryFound = true;
                 lib.addNewCodeBlock(c);
                 this.setState({
@@ -104,8 +107,26 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
                 break;
             }
         }
-        if (libraryFound === false) {
-            alert(`Did not find a library with name ${libraryName}`);
+      
+        var subRoutineFound = false;
+        for (const subRoutine of this.state.libraries[0].subRoutines) {   //looking for the library we will be submitting to
+            if (subRoutine.name === destination) {
+               subRoutineFound = true;
+                subRoutine.addNewCodeBlock(c);
+                this.setState({
+                    totalLines: this.state.totalLines + 1,
+
+                });
+                break;
+            }
+        }
+        if(!libraryFound && !subRoutineFound){
+            alert("Could not find the library or subroutine for this variable");
+            return false;
+
+        }else{
+            this.setState({libraries:this.state.libraries})
+            return true;
         }
     }
 
@@ -129,6 +150,9 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         }
         if (libraryFound === false) {
             alert(`Did not find a library with name ${libraryName}`);
+            return false;
+        }else{
+            return true;
         }
     }
 
@@ -148,7 +172,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
                     <Col sm={8} className="align-self-start" >
                         <h1>Current Library</h1>
                         <LibraryDisplay library={this.state.libraries[0]} notifyNewLibraryName={this.newLibraryNameSet} />
-                        <AddAFeature libraryName={this.state.libraries[0].name} submitVariable={this.handleNewVariableSubmitted} submitSubRoutine={this.handleNewSubRoutineSubmitted} />
+                        <AddAFeature currentSubRoutineNames={this.state.libraries[0].subRoutineNames}libraryName={this.state.libraries[0].name} submitVariable={this.handleNewVariableSubmitted} submitSubRoutine={this.handleNewSubRoutineSubmitted} />
                     </Col>
                 </Stack>
                 <Button id="fabButton" variant="success" type="button" onClick={this.saveCurrentLibrary}>

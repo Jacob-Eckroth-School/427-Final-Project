@@ -10,7 +10,7 @@ import { DropdownButton } from "react-bootstrap";
 import { Stack } from "react-bootstrap";
 
 //component that allows user to input a new thing and add it to a library
-export class AddAFeature extends React.Component<{ libraryName:string,submitVariable: Function, submitSubRoutine: Function }, { subRoutineName: string, subRoutineVariableNames: Map<number, string>, amountOfParameters: number, variableName: string, variableAssignment: string, variableAssignmentType: number, addSubRoutineSelected: boolean, addVariableSelected: boolean }> {
+export class AddAFeature extends React.Component<{ currentSubRoutineNames: Map<string, number>, libraryName: string, submitVariable: Function, submitSubRoutine: Function }, { subRoutineName: string, subRoutineVariableNames: Map<number, string>, amountOfParameters: number, variableName: string, variableAssignment: string, variableAssignmentType: number, addSubRoutineSelected: boolean, addVariableSelected: boolean,addVariableDestination:string}> {
 
   //constructor
   constructor(props: any) {
@@ -19,12 +19,14 @@ export class AddAFeature extends React.Component<{ libraryName:string,submitVari
       variableName: "",
       subRoutineName: "",
       addVariableSelected: true,
+      addVariableDestination:this.props.libraryName,
       addSubRoutineSelected: false,
       variableAssignment: "",
       variableAssignmentType: variableAssignmentTypes.LAMBDA_LENGTH_STRING,
       amountOfParameters: 0,
       subRoutineVariableNames: new Map<number, string>()
     };
+ 
     this.handleVariableNameChange = this.handleVariableNameChange.bind(this);
     this.submitVariable = this.submitVariable.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -40,6 +42,7 @@ export class AddAFeature extends React.Component<{ libraryName:string,submitVari
     this.updateParameterAmount = this.updateParameterAmount.bind(this);
     this.displayParameterInputs = this.displayParameterInputs.bind(this);
     this.handleParameterNameChange = this.handleParameterNameChange.bind(this);
+    this.changeWhereAddingVariable = this.changeWhereAddingVariable.bind(this);
   }
 
 
@@ -83,13 +86,16 @@ export class AddAFeature extends React.Component<{ libraryName:string,submitVari
 
   //event handler for when user presses submit variable, calls parent submit variable function
   submitVariable() {
-    this.props.submitVariable(
-      this.props.libraryName,
+  
+    if(this.props.submitVariable( //submit variable returns false if it couldn't submit
       this.state.variableName,
       this.state.variableAssignmentType,
-      this.state.variableAssignment
-    );
-    (document.getElementById("variableForm") as HTMLFormElement).reset();   //clears the form
+      this.state.variableAssignment,
+      this.state.addVariableDestination
+    ) == true){
+      (document.getElementById("variableForm") as HTMLFormElement).reset();   //clears the form
+    }
+    
   }
 
   submitSubRoutine() {
@@ -112,12 +118,15 @@ export class AddAFeature extends React.Component<{ libraryName:string,submitVari
       }
       subRoutineNames.push(this.state.subRoutineVariableNames.get(i))
     }
-    this.props.submitSubRoutine(
+    if( this.props.submitSubRoutine( //submit subroutine returns false if it couldn't submit
       this.props.libraryName,
       this.state.subRoutineName,
       subRoutineNames
-    )
+    ) == true){
+
       (document.getElementById("subRoutineForm") as HTMLFormElement).reset();   //clears the form
+    }
+   
 
   }
 
@@ -176,7 +185,23 @@ export class AddAFeature extends React.Component<{ libraryName:string,submitVari
       variableAssignmentType: variableAssignmentTypes.USER_INPUTED_VALUE
     })
   }
+  changeWhereAddingVariable(target:string) {
 
+    this.setState({
+      addVariableDestination:target
+    })
+  }
+
+  //creates a list of the optinos for where a variable can be added
+  createWhereToAddOptions() {
+    var options: any = [];
+    options.push(<option value={this.props.libraryName}>{this.props.libraryName}</option>
+    )
+    for (let subRoutineName of Array.from(this.props.currentSubRoutineNames.keys())) {
+      options.push(<option value={subRoutineName}>SubRoutine {subRoutineName}</option>)
+   }
+    return options;
+  }
 
   createAddVariableForm() {
     return <Form
@@ -196,6 +221,19 @@ export class AddAFeature extends React.Component<{ libraryName:string,submitVari
         <Form.Text className="text-muted">
           This must be a unique variable name.
         </Form.Text>
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Where to add this variable</Form.Label>
+        <Form.Select aria-label="Where to add the variable"
+          onChange={(e) => {
+            this.changeWhereAddingVariable(e.target.value)
+          }
+
+
+          }>
+          {this.createWhereToAddOptions()}
+
+        </Form.Select>
       </Form.Group>
       <Form.Group className="mb-3">
         <ToggleButtonGroup type="radio" name="options" defaultValue={1}>
