@@ -8,19 +8,22 @@ import { variableAssignmentTypes } from "../constants/variableAssignmentTypes";
 import { Dropdown } from "react-bootstrap";
 import { DropdownButton } from "react-bootstrap";
 import { Stack } from "react-bootstrap";
-import { truncate } from "fs";
+
 //component that allows user to input a new thing and add it to a library
-export class AddAFeature extends React.Component<{ submitVariable: Function }, { variableName: string, variableAssignment: string, variableAssignmentType: number,addSubRoutineSelected:boolean,addVariableSelected:boolean }> {
+export class AddAFeature extends React.Component<{ submitVariable: Function, submitSubRoutine: Function }, { subRoutineName: string, subRoutineVariableNames: Map<number, string>, amountOfParameters: number, variableName: string, variableAssignment: string, variableAssignmentType: number, addSubRoutineSelected: boolean, addVariableSelected: boolean }> {
 
   //constructor
   constructor(props: any) {
     super(props);
     this.state = {
       variableName: "",
-      addVariableSelected:true,
-      addSubRoutineSelected:false,
+      subRoutineName: "",
+      addVariableSelected: true,
+      addSubRoutineSelected: false,
       variableAssignment: "",
       variableAssignmentType: variableAssignmentTypes.LAMBDA_LENGTH_STRING,
+      amountOfParameters: 0,
+      subRoutineVariableNames: new Map<number, string>()
     };
     this.handleVariableNameChange = this.handleVariableNameChange.bind(this);
     this.submitVariable = this.submitVariable.bind(this);
@@ -34,6 +37,9 @@ export class AddAFeature extends React.Component<{ submitVariable: Function }, {
     this.selectAddSubRoutine = this.selectAddSubRoutine.bind(this);
     this.handleSubRoutineNameChange = this.handleSubRoutineNameChange.bind(this)
     this.submitSubRoutine = this.submitSubRoutine.bind(this);
+    this.updateParameterAmount = this.updateParameterAmount.bind(this);
+    this.displayParameterInputs = this.displayParameterInputs.bind(this);
+    this.handleParameterNameChange = this.handleParameterNameChange.bind(this);
   }
 
 
@@ -52,7 +58,21 @@ export class AddAFeature extends React.Component<{ submitVariable: Function }, {
     this.setState({ variableName: event.target.value });
   }
 
-  handleSubRoutineNameChange(){
+
+  //called whenever a subroutine name changes
+  handleSubRoutineNameChange(event: any) {
+    this.setState({ subRoutineName: event.target.value })
+  }
+
+
+  //called whenever the name to a parameter changes
+  handleParameterNameChange(event: any) {
+
+    this.state.subRoutineVariableNames.set(Number(event.target.id), event.target.value)
+    this.setState({
+      subRoutineVariableNames: this.state.subRoutineVariableNames
+    })
+
 
   }
 
@@ -72,8 +92,33 @@ export class AddAFeature extends React.Component<{ submitVariable: Function }, {
     (document.getElementById("variableForm") as HTMLFormElement).reset();   //clears the form
   }
 
-  submitSubRoutine(){
-    
+  submitSubRoutine() {
+    if (this.state.subRoutineName.length == 0) {
+      alert("Your subroutine must have a name!");
+      return;
+    }
+    var subRoutineNames: string[] = []
+    for (let i: number = 0; i < this.state.amountOfParameters; i++) {
+      for (let j: number = i + 1; j < this.state.amountOfParameters; j++) {
+
+        if (this.state.subRoutineVariableNames.get(i) === this.state.subRoutineVariableNames.get(j)) {
+          alert("You cannot have two parameter names that are identical.");
+          return;
+        }
+      }
+      if (this.state.subRoutineVariableNames.has(i) == false || this.state.subRoutineVariableNames.get(i).length == 0) {
+        alert("You must name every parameter to your subroutine!");
+        return;
+      }
+      subRoutineNames.push(this.state.subRoutineVariableNames.get(i))
+    }
+    this.props.submitSubRoutine(
+      "LibA",
+      this.state.subRoutineName,
+      subRoutineNames
+    )
+      (document.getElementById("subRoutineForm") as HTMLFormElement).reset();   //clears the form
+
   }
 
   //triggered when the user pressed the {0,1}^lambda button, updates the type of variable the user is assigning
@@ -86,19 +131,42 @@ export class AddAFeature extends React.Component<{ submitVariable: Function }, {
   }
 
 
-  selectAddVariable(){
+  selectAddVariable() {
     this.setState({
-      addVariableSelected:true,
-      addSubRoutineSelected:false
+      addVariableSelected: true,
+      addSubRoutineSelected: false
     })
 
   }
 
-  selectAddSubRoutine(){
+  selectAddSubRoutine() {
     this.setState({
-      addVariableSelected:false,
-      addSubRoutineSelected:true
+      addVariableSelected: false,
+      addSubRoutineSelected: true
     })
+  }
+
+  //updates the amount of parameters when the user is attempting to submit a subroutine
+  updateParameterAmount(amount: number) {
+    this.setState({
+      amountOfParameters: amount
+    })
+  }
+  //returns a list of the input boxes where user can enter parameter names
+  displayParameterInputs() {
+    var allParameters: any = [];
+    for (let i = 0; i < this.state.amountOfParameters; i++) {
+
+      allParameters.push(<Form.Group className="mb-3" controlId="formParameterInput" key={i.toString()}>
+        <Form.Label>Parameter #{i}</Form.Label>
+        <Form.Control type="text" placeholder="Enter unique parameter name" id={i.toString()} onChange={this.handleParameterNameChange} />
+
+      </Form.Group>);
+    }
+
+    return allParameters;
+
+
   }
 
   //triggered when user chooses to enter their own variable value.
@@ -162,13 +230,13 @@ export class AddAFeature extends React.Component<{ submitVariable: Function }, {
       </Form.Group>
 
       <Button variant="primary" type="button" onClick={this.submitVariable}>
-        Submit
+        Add Variable
       </Button>
     </Form>
   }
   createAddSubRoutineForm() {
     return <Form
-      id="variableForm"
+      id="subRoutineForm"
       onKeyDown={(e) => {
         this.handleKeyDown(e, this.submitSubRoutine);
       }}
@@ -186,63 +254,53 @@ export class AddAFeature extends React.Component<{ submitVariable: Function }, {
         </Form.Text>
       </Form.Group>
       <Form.Group className="mb-3">
-        <ToggleButtonGroup type="radio" name="options" defaultValue={1}>
-          <ToggleButton
-            id="tbg-radio-1"
-            value={1}
-            onClick={this.lambdaStringChosen}
-          >
-            &#123;0,1&#125;
-            <sup>λ</sup>
-          </ToggleButton>
-          <ToggleButton
-            id="tbg-radio-2"
-            value={2}
-            onClick={this.userEnteredVariableChosen}
-          >
-            Input Value:
-          </ToggleButton>
+        <Form.Label>Amount of Parameters</Form.Label>
+        <Form.Select aria-label="Default select example"
+          onChange={(e) => {
+            this.updateParameterAmount(Number(e.target.value))
+          }
 
-        </ToggleButtonGroup>
 
-        <Form.Control //we only show this control if the user assignment type is USER_INPUTTED_VALUE
-          type="text"
-          placeholder="Variable Value"
-          onChange={this.handleVariableValueChange}
-          hidden={this.state.variableAssignmentType === variableAssignmentTypes.USER_INPUTED_VALUE ? false : true}
-        />
-        <Form.Text className="text-muted"
-          hidden={this.state.variableAssignmentType === variableAssignmentTypes.USER_INPUTED_VALUE ? false : true}>
-          Assign a value to this variable.
-        </Form.Text>
+          }>
+
+          <option value="0">No Parameters</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+          <option value="4">Four</option>
+          <option value="5">Five</option>
+        </Form.Select>
       </Form.Group>
+      {this.displayParameterInputs()}
 
-      <Button variant="primary" type="button" onClick={this.submitVariable}>
-        Submit
+      <Button variant="primary" type="button" onClick={this.submitSubRoutine}>
+        Add SubRoutine
       </Button>
     </Form>
   }
+
+
 
   createDropDownSelector() {
     return (
       <DropdownButton className="mt-2" id="dropdown-basic-button" variant="info" title="Change Selection">
         <Dropdown.Item onClick={
-         (e)=>{
-          this.selectAddVariable()
-         }
-            
-          
-       
-       
+          (e) => {
+            this.selectAddVariable()
+          }
+
+
+
+
         }>Add Variable</Dropdown.Item>
         <Dropdown.Item onClick={
-        (e)=>{
-          this.selectAddSubRoutine()
-        }
-          
-          
-        
-       
+          (e) => {
+            this.selectAddSubRoutine()
+          }
+
+
+
+
         }>Add SubRoutine</Dropdown.Item>
       </DropdownButton>
     )

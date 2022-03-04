@@ -16,6 +16,24 @@ export class SubRoutineDisplay extends React.Component<{subRoutine:SubRoutine},{
         {
             subRoutine: this.props.subRoutine
         }
+        this.generateSubRoutineParameters = this.generateSubRoutineParameters.bind(this);
+    }
+
+    generateSubRoutineParameters(){
+        let i:number = 0;
+        var parameters:string = "";
+        console.log(this.state.subRoutine.parameters);
+        for(i; i < this.state.subRoutine.parameters.length-1; i++){
+            console.log(i);
+            console.log(this.state.subRoutine.parameters[i]);
+            parameters += this.state.subRoutine.parameters[i] + ", ";
+        }
+        if(this.state.subRoutine.parameters.length != 0){
+            console.log(this.state.subRoutine.parameters[i]);
+            parameters += this.state.subRoutine.parameters[i];
+        }
+        console.log(parameters);
+        return parameters
 
     }
 
@@ -24,7 +42,7 @@ export class SubRoutineDisplay extends React.Component<{subRoutine:SubRoutine},{
     render() {
         return (
             <Stack>
-                <h2 className="subRoutineTitle">{this.state.subRoutine.name + '():'}</h2>
+                <h2 className="subRoutineTitle">{this.state.subRoutine.name + '('+ this.generateSubRoutineParameters() +'):'}</h2>
                 <Container className="px-3">
                     <List   //renders all of the lines of code stored within the subroutine
                             //LIST is a draggable list :)
