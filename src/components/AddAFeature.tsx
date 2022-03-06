@@ -43,6 +43,7 @@ export class AddAFeature extends React.Component<{ currentSubRoutineNames: Map<s
     this.displayParameterInputs = this.displayParameterInputs.bind(this);
     this.handleParameterNameChange = this.handleParameterNameChange.bind(this);
     this.changeWhereAddingVariable = this.changeWhereAddingVariable.bind(this);
+
   }
 
 
@@ -194,11 +195,24 @@ export class AddAFeature extends React.Component<{ currentSubRoutineNames: Map<s
 
   //creates a list of the optinos for where a variable can be added
   createWhereToAddOptions() {
+    
     var options: any = [];
-    options.push(<option value={this.props.libraryName}>{this.props.libraryName}</option>
-    )
+    var destinationNameFound:boolean = false; // whether we have found where the destination is supposed to go
+    options.push(<option value={this.props.libraryName}>{this.props.libraryName}</option>)
+    if(this.state.addVariableDestination === this.props.libraryName){
+      destinationNameFound = true;
+    }
+ 
     for (let subRoutineName of Array.from(this.props.currentSubRoutineNames.keys())) {
       options.push(<option value={subRoutineName}>SubRoutine {subRoutineName}</option>)
+      if(subRoutineName === this.state.addVariableDestination){
+        destinationNameFound = true;
+      }
+   }
+   if(!destinationNameFound){
+     this.setState({
+       addVariableDestination:this.props.libraryName
+     })
    }
     return options;
   }
@@ -228,6 +242,7 @@ export class AddAFeature extends React.Component<{ currentSubRoutineNames: Map<s
           onChange={(e) => {
             this.changeWhereAddingVariable(e.target.value)
           }
+          
 
 
           }>
