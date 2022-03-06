@@ -19,12 +19,23 @@ export class SavedLineOfCode extends React.Component<{newProps:any,codeBlock:Cod
     
         if (this.props.codeBlock.type === typeOfCodeLine.VARIABLE_ASSIGNMENT) { //if the line is a variable assignment line
             if (this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.LAMBDA_LENGTH_STRING) {
-                codeParagraph = <p className="savedCodeText">{this.props.codeBlock.variableName} :=  &#123;0,1&#125;
+                codeParagraph = <p className="codeText">{this.props.codeBlock.variableName} :=  &#123;0,1&#125;
                     <sup>λ</sup></p>
             } else if (this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.USER_INPUTED_VALUE) {
-                codeParagraph = <p className="savedCodeText">{this.props.codeBlock.variableName} := {this.props.codeBlock.variableAssignment}</p>
+                codeParagraph = <p className="codeText">{this.props.codeBlock.variableName} := {this.props.codeBlock.variableAssignment}</p>
+                   
             }   //only 2 options for now.
-        }   //this is the only thing we know how to parse for now
+        }else if(this.props.codeBlock.type=== typeOfCodeLine.RETURN_STATEMENT){
+            if (this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.LAMBDA_LENGTH_STRING) {
+                codeParagraph = <p className="codeText">return &#123;0,1&#125;
+                    <sup>λ</sup></p>
+            } else if (this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.USER_INPUTED_VALUE) {
+                codeParagraph = <p className="codeText">return {this.props.codeBlock.variableAssignment}</p>
+                   
+            }else if(this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.VARIABLE){
+                codeParagraph = <p className="codeText">return {this.props.codeBlock.variableAssignment}</p>
+            }  
+        }   //this is the only thing we know how to parse for now//this is the only thing we know how to parse for now
         return codeParagraph;
     }
     render() {

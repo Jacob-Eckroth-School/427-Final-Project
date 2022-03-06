@@ -8,6 +8,7 @@ export class SubRoutine {
     codeBlocks: CodeBlock[];
     variables: Map<string, number>;
     parameters: string[];
+    hasReturnStatement:boolean = false;
 
     /*
     @param libraryName lists what library the subroutine is in
@@ -53,6 +54,12 @@ export class SubRoutine {
         if (newCodeBlock.type === typeOfCodeLine.VARIABLE_ASSIGNMENT && !this.variables.has(newCodeBlock.variableName)) {
             this.variables.set(newCodeBlock.variableName, 1);
             this.codeBlocks.push(newCodeBlock);
+        }else if(newCodeBlock.type === typeOfCodeLine.RETURN_STATEMENT){
+           
+                this.hasReturnStatement = true;
+        
+            this.codeBlocks.push(newCodeBlock);
+      
         }
         else if (this.variables.has(newCodeBlock.variableName))
             alert("This variable has already been used. Please pick another name")

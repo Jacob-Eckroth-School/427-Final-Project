@@ -7,6 +7,7 @@ export enum variableAssignmentTypes
 {
     LAMBDA_LENGTH_STRING=0,
     USER_INPUTED_VALUE,
+    VARIABLE,
     POSSIBLE_VARIABLE_TYPES
 
 }
@@ -16,5 +17,6 @@ export enum variableAssignmentTypes
 //Currently there is only one type of line of code, which is VARIABLE_ASSIGNMENT, assigning a variable to a value.
 export enum typeOfCodeLine{
     VARIABLE_ASSIGNMENT=0,
+    RETURN_STATEMENT,
     POSSIBLE_CODE_LINE_TYPES
 }
