@@ -17,13 +17,14 @@ import { LatexGenerator } from "../classes/LatexGenerator";
 import axios from "axios";
 
 //the main holder for the library which holds all of the different components
-export class CodeHolder extends React.Component<{}, { totalLines: number, libraries: Library[], previousLibraries: PreviousLibraries<[Library,string]> }> {
+export class CodeHolder extends React.Component<{}, { totalLines: number, library: Library, previousLibraries: PreviousLibraries<[Library, string]> }> {
     constructor(props: any) {
         super(props);
         this.handleNewVariableSubmitted =
             this.handleNewVariableSubmitted.bind(this);
         this.handleNewSubRoutineSubmitted = this.handleNewSubRoutineSubmitted.bind(this);
-        this.initializeTestLibraries = this.initializeTestLibraries.bind(this);
+        this.handleNewReturnStatementSubmitted = this.handleNewReturnStatementSubmitted.bind(this);
+      
         this.saveCurrentLibrary = this.saveCurrentLibrary.bind(this);
         this.showLatex = this.showLatex.bind(this);
         this.newLibraryNameSet = this.newLibraryNameSet.bind(this);
@@ -31,40 +32,30 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
         this.state = {
             totalLines: 0,
-            libraries: [],
-            previousLibraries: new PreviousLibraries<[Library,string]>()
+            library:  new Library("Example Library", 1, []),
+            previousLibraries: new PreviousLibraries<[Library, string]>()
         };
-        this.initializeTestLibraries();
+     
 
 
     }
 
-    //initializes the test libraries, eventually this will be deleted
-    initializeTestLibraries() {
-        let l1: Library = new Library("Example Library", 1, []);
-        this.state.libraries.push(l1);
-      
+    
+    newLibraryNameSet() {
         this.setState({
-            libraries: this.state.libraries,
-        });
-
-
-    }
-    newLibraryNameSet(){
-        this.setState({
-            libraries: this.state.libraries,
+            library: this.state.library
         });
     }
     //moves the current library into a list of saved libraries, and displays it on the left side of the screen
     saveCurrentLibrary() {
-        var reasonForSaving:string = prompt("Please enter the motivation behind saving this library, i.e. `inlined subroutine into library`","No Reason Given");
+        var reasonForSaving: string = prompt("Please enter the motivation behind saving this library, i.e. `inlined subroutine into library`", "No Reason Given");
         //push a tuple with reasonForSaving added so it can be displayed in latex.
-        this.state.previousLibraries.push([JSON.parse(JSON.stringify(this.state.libraries[0])),reasonForSaving]);
-        this.state.libraries[0].versionNumber = this.state.libraries[0].versionNumber + 1
+        this.state.previousLibraries.push([JSON.parse(JSON.stringify(this.state.library)), reasonForSaving]);
+        this.state.library.versionNumber = this.state.library.versionNumber + 1
         this.setState({
 
             previousLibraries: this.state.previousLibraries,
-            libraries: this.state.libraries
+            library: this.state.library
 
         })
     }
@@ -81,11 +72,11 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
     //function that is called whenever a new variable is submitted to a LIBRARY
     handleNewVariableSubmitted(
-        
+
         newVariableName: string,
         newVariableAssignmentType: number,
         newVariableAssignment: string,
-        destination:string
+        destination: string
     ) {
         let c = new CodeBlock(
             typeOfCodeLine.VARIABLE_ASSIGNMENT,
@@ -96,23 +87,23 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         );
 
         var libraryFound = false;
-    
-        for (const lib of this.state.libraries) {   //looking for the library we will be submitting to
 
-            if (lib.name === destination) {
-                libraryFound = true;
-                lib.addNewCodeBlock(c);
-                this.setState({
-                    totalLines: this.state.totalLines + 1,
-                });
-                break;
-            }
+
+
+        if (this.state.library.name === destination) {
+            libraryFound = true;
+            this.state.library.addNewCodeBlock(c);
+            this.setState({
+                totalLines: this.state.totalLines + 1,
+            });
+
         }
-      
+
+
         var subRoutineFound = false;
-        for (const subRoutine of this.state.libraries[0].subRoutines) {   //looking for the library we will be submitting to
+        for (const subRoutine of this.state.library.subRoutines) {   //looking for the library we will be submitting to
             if (subRoutine.name === destination) {
-               subRoutineFound = true;
+                subRoutineFound = true;
                 subRoutine.addNewCodeBlock(c);
                 this.setState({
                     totalLines: this.state.totalLines + 1,
@@ -121,12 +112,12 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
                 break;
             }
         }
-        if(!libraryFound && !subRoutineFound){
+        if (!libraryFound && !subRoutineFound) {
             alert("Could not find the library or subroutine for this variable");
             return false;
 
-        }else{
-            this.setState({libraries:this.state.libraries})
+        } else {
+            this.setState({ library: this.state.library })
             return true;
         }
     }
@@ -137,27 +128,60 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         subRoutineParameters: string[]
     ) {
 
-        let s:SubRoutine = new SubRoutine(libraryName,subRoutineName,[],subRoutineParameters);
+        let s: SubRoutine = new SubRoutine(libraryName, subRoutineName, [], subRoutineParameters);
         var libraryFound = false;
-        for (const lib of this.state.libraries) {   //looking for the library we will be submitting to
-            if (lib.name === libraryName) {
-                libraryFound = true;
-                lib.addSubRoutine(s);
-                this.setState({
-                    libraries:this.state.libraries
-                })
-                break;
-            }
+
+        if (this.state.library.name === libraryName) {
+            libraryFound = true;
+            this.state.library.addSubRoutine(s);
+            this.setState({
+                library: this.state.library
+            })
+
         }
+
         if (libraryFound === false) {
             alert(`Did not find a library with name ${libraryName}`);
             return false;
-        }else{
+        } else {
             return true;
         }
     }
+    handleNewReturnStatementSubmitted(returnAssignment:string,destination:string,assignmentType:number){
+        let c = new CodeBlock(
+            typeOfCodeLine.RETURN_STATEMENT,
+            "",
+            assignmentType,
+            returnAssignment,
+            this.state.totalLines.toString()
+        );
 
-    copyCurrentLatexToClipboard(){
+        
+
+
+        var subRoutineFound = false;
+        for (const subRoutine of this.state.library.subRoutines) {   //looking for the library we will be submitting to
+            if (subRoutine.name === destination) {
+                subRoutineFound = true;
+                subRoutine.addNewCodeBlock(c);
+                this.setState({
+                    totalLines: this.state.totalLines + 1,
+
+                });
+                break;
+            }
+        }
+        if (!subRoutineFound) {
+            alert("Could not find the subroutine for this variable");
+            return false;
+
+        } else {
+            this.setState({ library: this.state.library })
+            return true;
+        } 
+    }
+
+    copyCurrentLatexToClipboard() {
         navigator.clipboard.writeText(LatexGenerator.createFullLatexNoURI("Test Title", "Test Author", this.state.previousLibraries));
         alert("Previous Libraries Latex has been copied to clipboard. Paste it into a .tex file to see the result.")
     }
@@ -172,19 +196,19 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
                     </Col>
                     <Col sm={8} className="align-self-start" >
                         <h1>Current Library</h1>
-                        <LibraryDisplay library={this.state.libraries[0]} notifyNewLibraryName={this.newLibraryNameSet} />
-                        <AddAFeature currentSubRoutineNames={this.state.libraries[0].subRoutineNames}libraryName={this.state.libraries[0].name} submitVariable={this.handleNewVariableSubmitted} submitSubRoutine={this.handleNewSubRoutineSubmitted} />
+                        <LibraryDisplay library={this.state.library} notifyNewLibraryName={this.newLibraryNameSet} />
+                        <AddAFeature submitReturnStatement={this.handleNewReturnStatementSubmitted} currentSubRoutineNames={this.state.library.subRoutineNames} currentSubRoutines={this.state.library.subRoutines} libraryName={this.state.library.name} submitVariable={this.handleNewVariableSubmitted} submitSubRoutine={this.handleNewSubRoutineSubmitted} />
                     </Col>
                 </Stack>
                 <Button id="fabButton" variant="success" type="button" onClick={this.saveCurrentLibrary}>
                     Save Current Library
                 </Button>
-              
+
                 <Button variant="success" id="fabButtonTwo" type="button" onClick={this.showLatex}>
                     Show Previous Libraries Latex
                 </Button>
                 <Button id="fabButtonThree" variant="success" type="button" onClick={this.copyCurrentLatexToClipboard}>
-                    Copy Previous Libraries Latex <i className="fa fa-files-o" aria-hidden="true"/>
+                    Copy Previous Libraries Latex <i className="fa fa-files-o" aria-hidden="true" />
                 </Button>
 
             </Container>
