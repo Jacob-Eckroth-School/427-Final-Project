@@ -9,6 +9,8 @@ import { Dropdown } from "react-bootstrap";
 import { DropdownButton } from "react-bootstrap";
 import { Stack } from "react-bootstrap";
 import { SubRoutine } from "../classes/SubRoutine";
+import { LoaderOptionsPlugin } from "webpack";
+import { timeStamp } from "console";
 
 //component that allows user to input a new thing and add it to a library
 export class AddAFeature extends React.Component<{
@@ -30,6 +32,8 @@ export class AddAFeature extends React.Component<{
     returnAssignment: string,
     returnAssignmentType: number,
     returnAssignmentDestination: string,
+    returnVariableAmount: number,
+    returnVariables:string[],
 
 
     addSubRoutineSelected: boolean,
@@ -59,6 +63,8 @@ export class AddAFeature extends React.Component<{
       returnAssignmentType: variableAssignmentTypes.LAMBDA_LENGTH_STRING,
 
       amountOfParameters: 0,
+      returnVariableAmount: 1,
+      returnVariables: [],
       subRoutineVariableNames: new Map<number, string>()
     };
 
@@ -75,6 +81,8 @@ export class AddAFeature extends React.Component<{
     this.handleSubRoutineNameChange = this.handleSubRoutineNameChange.bind(this)
     this.submitSubRoutine = this.submitSubRoutine.bind(this);
     this.updateParameterAmount = this.updateParameterAmount.bind(this);
+    this.createReturnVariablesForm = this.createReturnVariablesForm.bind(this);
+
     this.displayParameterInputs = this.displayParameterInputs.bind(this);
     this.handleParameterNameChange = this.handleParameterNameChange.bind(this);
     this.changeWhereAddingVariable = this.changeWhereAddingVariable.bind(this);
@@ -89,7 +97,9 @@ export class AddAFeature extends React.Component<{
     this.variableReturnTypeChosen = this.variableReturnTypeChosen.bind(this);
     this.submitReturnStatement = this.submitReturnStatement.bind(this);
     this.createVariablesForReturnStatementOptions = this.createVariablesForReturnStatementOptions.bind(this);
-    this.changeVariableForReturnStatement = this.changeVariableForReturnStatement.bind(this);
+    this.changeVariableSelectedForReturnStatement = this.changeVariableSelectedForReturnStatement.bind(this);
+    this.updateVariableAmountReturning = this.updateVariableAmountReturning.bind(this);
+    this.getWhatShouldReturnVariableBe = this.getWhatShouldReturnVariableBe.bind(this);
     /*end*/
 
   }
@@ -225,6 +235,19 @@ export class AddAFeature extends React.Component<{
       amountOfParameters: amount
     })
   }
+  updateVariableAmountReturning(amount: number) {
+    while(this.state.returnVariables.length > amount){
+      this.state.returnVariables.pop();
+    }
+    while(this.state.returnVariables.length != amount){
+      this.state.returnVariables.push(Array.from(this.props.currentSubRoutines[0].variables.keys())[0])
+    }
+    this.setState({
+      returnVariableAmount: amount,
+      returnVariables: this.state.returnVariables
+      
+    })
+  }
   //returns a list of the input boxes where user can enter parameter names
   displayParameterInputs() {
     var allParameters: any = [];
@@ -296,7 +319,7 @@ export class AddAFeature extends React.Component<{
         returnAssignmentDestination: this.props.currentSubRoutines[0] ? this.props.currentSubRoutines[0].name : ""
       })
     }
-  
+
 
     return options;
   }
@@ -425,9 +448,10 @@ export class AddAFeature extends React.Component<{
   variableReturnTypeChosen() {
     this.setState({
       returnAssignmentType: variableAssignmentTypes.VARIABLE,
-      returnAssignment: Array.from(this.props.currentSubRoutines[0].variables.keys())[0]  
+      returnVariableAmount: 1,
+      returnVariables: [Array.from(this.props.currentSubRoutines[0].variables.keys())[0]]
     })
-    
+
   }
   userEnteredReturnTypeChosen() {
     this.setState({
@@ -459,18 +483,18 @@ export class AddAFeature extends React.Component<{
     }
     return options;
   }
-  changeVariableForReturnStatement(target: string) {
-    console.log("changing to target:  " +  target)
-    this.setState({
-      returnAssignment: target
-    })
-  }
+
+
+
+  
 
   submitReturnStatement() {
     if (this.props.submitReturnStatement( //submit variable returns false if it couldn't submit
       this.state.returnAssignment,
       this.state.returnAssignmentDestination,
       this.state.returnAssignmentType,
+      this.state.returnVariables
+      
 
     ) == true) {
       (document.getElementById("variableForm") as HTMLFormElement).reset();   //clears the form
@@ -480,7 +504,61 @@ export class AddAFeature extends React.Component<{
     }
   }
 
+  changeVariableSelectedForReturnStatement(index:number,value:string){
+    this.state.returnVariables[index] = value;
+    this.setState({
+      returnVariables:this.state.returnVariables
+    })
+  }
 
+  getWhatShouldReturnVariableBe():any[]{
+      var options:any[] = [];
+
+      for(var i = 0; i < this.state.returnVariableAmount; i++){
+         options.push(
+          <Form.Group className="mb-3"   hidden={this.state.returnAssignmentType === variableAssignmentTypes.VARIABLE ? false : true}>
+            <Form.Label >What should return variable {i} be?</Form.Label>
+            <Form.Select aria-label={`What variable to assign return value ${i} to`}
+
+              onChange={(e) => {
+                this.changeVariableSelectedForReturnStatement(i,e.target.value)}}
+            >
+              {this.createVariablesForReturnStatementOptions()}
+
+            </Form.Select>
+            
+        </Form.Group>)
+      }
+      return options;
+      
+  }
+
+  createReturnVariablesForm() {
+
+    var options = this.getWhatShouldReturnVariableBe();
+    return [
+      <Form.Group className="mb-3" hidden={this.state.returnAssignmentType === variableAssignmentTypes.VARIABLE ? false : true}>
+        <Form.Label>How many variables do you want to return?</Form.Label>
+        <Form.Select aria-label="Default select example"
+          onChange={(e) => {
+            this.updateVariableAmountReturning(Number(e.target.value))
+          }
+
+
+          }>
+
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+          <option value="4">Four</option>
+          <option value="5">Five</option>
+        </Form.Select>
+      </Form.Group>,
+      ...options
+     
+    
+    ]
+  }
 
   createAddReturnStatementForm() {
     return <Form
@@ -517,14 +595,14 @@ export class AddAFeature extends React.Component<{
             <sup>λ</sup>
           </ToggleButton>
           <ToggleButton
-            id="tbg-radio-1"
+            id="tbg-radio-2"
             value={2}
             onClick={this.variableReturnTypeChosen}
           >
-            SubRoutine Variable
+            SubRoutine Variables
           </ToggleButton>
           <ToggleButton
-            id="tbg-radio-2"
+            id="tbg-radio-3"
             value={3}
             onClick={this.userEnteredReturnTypeChosen}
           >
@@ -532,38 +610,11 @@ export class AddAFeature extends React.Component<{
           </ToggleButton>
 
         </ToggleButtonGroup>
-
-
-
       </Form.Group>
-      <Form.Group className="mb-3"  hidden={this.state.returnAssignmentType === variableAssignmentTypes.USER_INPUTED_VALUE ? false : true}>
-        <Form.Control //we only show this control if the user assignment type is USER_INPUTTED_VALUE
-          type="text"
-          placeholder="Return Value"
-          onChange={(e) => {
-            this.changeVariableForReturnStatement(e.target.value)
-          }}
-        />
-        <Form.Text className="text-muted">
-          Assign a value to this return statement.
-        </Form.Text>
-        </Form.Group>
-      <Form.Group className="mb-3"
-        hidden={this.state.returnAssignmentType === variableAssignmentTypes.VARIABLE ? false : true}>
-        <Form.Label >What variable should the return statement be assigned to?</Form.Label>
-        <Form.Select aria-label="What variable to assign return statement to"
+      
+      {this.createReturnVariablesForm()}
+     
 
-          onChange={(e) => {
-            this.changeVariableForReturnStatement(e.target.value)
-          }
-
-
-
-          }>
-          {this.createVariablesForReturnStatementOptions()}
-
-        </Form.Select>
-      </Form.Group>
 
       <Button variant="primary" type="button" onClick={this.submitReturnStatement}>
         Add Return Statement
