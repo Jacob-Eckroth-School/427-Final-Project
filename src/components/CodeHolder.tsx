@@ -15,6 +15,7 @@ import { PreviousLibrariesDisplay } from "./SavedComponents/PreviousLibrariesDis
 import { Button } from "react-bootstrap";
 import { LatexGenerator } from "../classes/LatexGenerator";
 import axios from "axios";
+import { getHw2_2Library } from "../classes/DefaultLibraries";
 
 //the main holder for the library which holds all of the different components
 export class CodeHolder extends React.Component<{}, { totalLines: number, library: Library, previousLibraries: PreviousLibraries<[Library, string]> }> {
@@ -32,7 +33,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
         this.state = {
             totalLines: 0,
-            library:  new Library("Example Library", 1, []),
+            library: getHw2_2Library(),
             previousLibraries: new PreviousLibraries<[Library, string]>()
         };
      
@@ -42,6 +43,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
     
     newLibraryNameSet() {
+ 
         this.setState({
             library: this.state.library
         });
@@ -147,13 +149,14 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
             return true;
         }
     }
-    handleNewReturnStatementSubmitted(returnAssignment:string,destination:string,assignmentType:number){
+    handleNewReturnStatementSubmitted(returnAssignment:string,destination:string,assignmentType:number,variables:string[]){
         let c = new CodeBlock(
             typeOfCodeLine.RETURN_STATEMENT,
             "",
             assignmentType,
             returnAssignment,
-            this.state.totalLines.toString()
+            this.state.totalLines.toString(),
+            variables
         );
 
         

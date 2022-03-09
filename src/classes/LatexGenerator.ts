@@ -278,6 +278,16 @@ export abstract class LatexGenerator {
                 return `$${codeBlock.variableName} \\gets \\{0,1\\}^{\\lambda}$\\\\\n`;
             }else if(codeBlock.variableAssignmentType === variableAssignmentTypes.USER_INPUTED_VALUE){
                 return `$${codeBlock.variableName} := ${codeBlock.variableAssignment}$\\\\\n`;
+            }else if(codeBlock.variableAssignmentType === variableAssignmentTypes.VARIABLE){
+                return `$${codeBlock.variableName} = ${codeBlock.variableAssignment}$\\\\\n`;
+            }
+        }else if(codeBlock.type === typeOfCodeLine.RETURN_STATEMENT){
+            if(codeBlock.variableAssignmentType === variableAssignmentTypes.LAMBDA_LENGTH_STRING){
+                return `return $\\{0,1\\}^{\\lambda}$\\\\\n`;
+            }else if(codeBlock.variableAssignmentType === variableAssignmentTypes.USER_INPUTED_VALUE){
+                return `return $ ${codeBlock.variableAssignment}$\\\\\n`;
+            }else if(codeBlock.variableAssignmentType === variableAssignmentTypes.VARIABLE){
+                return `return $ ${codeBlock.variableAssignment}$\\\\\n`;
             }
         }
         return ""

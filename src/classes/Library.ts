@@ -61,7 +61,10 @@ export class Library {
      addNewCodeBlock(newCodeBlock: CodeBlock) {
         if (newCodeBlock.type === typeOfCodeLine.VARIABLE_ASSIGNMENT && !this.variables.has(newCodeBlock.variableName)) {
             this.variables.set(newCodeBlock.variableName,1);
+           
+          
             this.codeBlocks.push(newCodeBlock)
+           
         }
         else if (this.variables.has(newCodeBlock.variableName))
             alert("This variable has already been used. Please pick another name")

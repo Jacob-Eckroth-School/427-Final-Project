@@ -26,7 +26,10 @@ export class LineOfCode extends React.Component<{newProps:any,codeBlock:CodeBloc
             } else if (this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.USER_INPUTED_VALUE) {
                 codeParagraph = <p className="codeText">{this.props.codeBlock.variableName} := {this.props.codeBlock.variableAssignment}</p>
                    
-            }   //only 2 options for now.
+            }else if(this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.VARIABLE){
+                codeParagraph = <p className="codeText">{this.props.codeBlock.variableName} = {this.props.codeBlock.variableAssignment}</p>
+            }
+                //only 2 options for now.
         }else if(this.props.codeBlock.type=== typeOfCodeLine.RETURN_STATEMENT){
     
             if (this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.LAMBDA_LENGTH_STRING) {
@@ -36,7 +39,8 @@ export class LineOfCode extends React.Component<{newProps:any,codeBlock:CodeBloc
                 codeParagraph = <p className="codeText">return {this.props.codeBlock.variableAssignment}</p>
                    
             }else if(this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.VARIABLE){
-                codeParagraph = <p className="codeText">return {this.props.codeBlock.variableAssignment}</p>
+               
+                codeParagraph = <p className="codeText">return {`(${this.props.codeBlock.returnVariables?.join(',')})`}</p>
             }  
         }   //this is the only thing we know how to parse for now
         return (<Stack direction="horizontal" gap={3}>{codeParagraph} <Button type="button" variant="danger"><i className="fa fa-solid fa-trash-can"/></Button> </Stack>);
