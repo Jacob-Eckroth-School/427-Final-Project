@@ -18,14 +18,19 @@ import axios from "axios";
 import { getHw2_2Library } from "../classes/DefaultLibraries";
 
 //the main holder for the library which holds all of the different components
+
 export class CodeHolder extends React.Component<{}, { totalLines: number, library: Library, previousLibraries: PreviousLibraries<[Library, string]> }> {
     constructor(props: any) {
         super(props);
-        this.handleNewVariableSubmitted =
-            this.handleNewVariableSubmitted.bind(this);
+        this.handleNewVariableSubmitted = this.handleNewVariableSubmitted.bind(this);
         this.handleNewSubRoutineSubmitted = this.handleNewSubRoutineSubmitted.bind(this);
+
+        this.initializeTestLibraries = this.initializeTestLibraries.bind(this);
+        this.handleNewReturnStatementSubmitted = this.handleNewReturnStatementSubmitted.bind(this);
+        this.handleVariableDeleted = this.handleVariableDeleted.bind(this);
         this.handleNewReturnStatementSubmitted = this.handleNewReturnStatementSubmitted.bind(this);
       
+
         this.saveCurrentLibrary = this.saveCurrentLibrary.bind(this);
         this.showLatex = this.showLatex.bind(this);
         this.newLibraryNameSet = this.newLibraryNameSet.bind(this);
@@ -33,20 +38,10 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
         this.state = {
             totalLines: 0,
+ 
             library: getHw2_2Library(),
             previousLibraries: new PreviousLibraries<[Library, string]>()
         };
-     
-
-
-    }
-
-    
-    newLibraryNameSet() {
- 
-        this.setState({
-            library: this.state.library
-        });
     }
     //moves the current library into a list of saved libraries, and displays it on the left side of the screen
     saveCurrentLibrary() {
@@ -70,7 +65,34 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         //this.sendLatexToServer(latex)
     }
 
+    //function that is called whenever a variable is deleted from a LIBRARY
+    handleVariableDeleted(
+        newVariableName: string,
+        newVariableAssignmentType: number,
+        newVariableAssignment: string,
+        destination: string
+    ) {
+        let c = new CodeBlock(
+            typeOfCodeLine.VARIABLE_ASSIGNMENT,
+            newVariableName,
+            newVariableAssignmentType,
+            newVariableAssignment,
+            this.state.totalLines.toString()
+        );
+    
+        var libraryFound = false;
+        if (this.state.library.name === destination) {
+            libraryFound = true;
+            this.state.library.deleteCodeBlock(c);
+            this.setState({
+                totalLines: this.state.totalLines - 1,
+            });
 
+        }
+
+        this.setState({ library: this.state.library })
+        return true;
+    }
 
     //function that is called whenever a new variable is submitted to a LIBRARY
     handleNewVariableSubmitted(
@@ -89,8 +111,6 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         );
 
         var libraryFound = false;
-
-
 
         if (this.state.library.name === destination) {
             libraryFound = true;
@@ -199,7 +219,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
                     </Col>
                     <Col sm={8} className="align-self-start" >
                         <h1>Current Library</h1>
-                        <LibraryDisplay library={this.state.library} notifyNewLibraryName={this.newLibraryNameSet} />
+                        <LibraryDisplay library={this.state.library} notifyNewLibraryName={this.newLibraryNameSet} deleteVariable={this.handleVariableDeleted} libraryName={this.state.library.name} />
                         <AddAFeature submitReturnStatement={this.handleNewReturnStatementSubmitted} currentSubRoutineNames={this.state.library.subRoutineNames} currentSubRoutines={this.state.library.subRoutines} libraryName={this.state.library.name} submitVariable={this.handleNewVariableSubmitted} submitSubRoutine={this.handleNewSubRoutineSubmitted} />
                     </Col>
                 </Stack>
