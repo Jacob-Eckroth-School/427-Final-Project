@@ -25,7 +25,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         this.handleNewVariableSubmitted = this.handleNewVariableSubmitted.bind(this);
         this.handleNewSubRoutineSubmitted = this.handleNewSubRoutineSubmitted.bind(this);
 
-        this.initializeTestLibraries = this.initializeTestLibraries.bind(this);
+      
         this.handleNewReturnStatementSubmitted = this.handleNewReturnStatementSubmitted.bind(this);
         this.handleVariableDeleted = this.handleVariableDeleted.bind(this);
         this.handleNewReturnStatementSubmitted = this.handleNewReturnStatementSubmitted.bind(this);
@@ -33,7 +33,6 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
         this.saveCurrentLibrary = this.saveCurrentLibrary.bind(this);
         this.showLatex = this.showLatex.bind(this);
-        this.newLibraryNameSet = this.newLibraryNameSet.bind(this);
         this.copyCurrentLatexToClipboard = this.copyCurrentLatexToClipboard.bind(this);
 
         this.state = {
@@ -42,6 +41,12 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
             library: getHw2_2Library(),
             previousLibraries: new PreviousLibraries<[Library, string]>()
         };
+    }
+
+    newLibraryNameSet(){
+        this.setState({
+            library:this.state.library
+        })
     }
     //moves the current library into a list of saved libraries, and displays it on the left side of the screen
     saveCurrentLibrary() {
