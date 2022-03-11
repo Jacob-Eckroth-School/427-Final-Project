@@ -58,13 +58,30 @@ export class Library {
         }
     }
 
-     addNewCodeBlock(newCodeBlock: CodeBlock) {
+    addNewCodeBlock(newCodeBlock: CodeBlock) {
         if (newCodeBlock.type === typeOfCodeLine.VARIABLE_ASSIGNMENT && !this.variables.has(newCodeBlock.variableName)) {
             this.variables.set(newCodeBlock.variableName,1);
             this.codeBlocks.push(newCodeBlock)
         }
         else if (this.variables.has(newCodeBlock.variableName))
             alert("This variable has already been used. Please pick another name")
+    }
+
+    deleteCodeBlock(blockToDelete: CodeBlock){
+        //Add check for referenced in other variables
+        if (blockToDelete.type === typeOfCodeLine.VARIABLE_ASSIGNMENT) {
+            let i = 0
+            let index = -2
+            while(i < this.codeBlocks.length){
+                if(blockToDelete.variableName === this.codeBlocks[i].variableName){
+                    index = i
+                }
+                i++
+            }
+            if (index > -1) {
+                this.codeBlocks.splice(index, 1); // 2nd parameter means remove one item only
+            }   
+        }
     }
 }
 

@@ -9,12 +9,21 @@ import "../css/LineOfCode.css";
 //only prop passed in is "codeString, and key"
 
 
-export class LineOfCode extends React.Component<{newProps:any,codeBlock:CodeBlock},{}>{
+export class LineOfCode extends React.Component<{newProps:any,codeBlock:CodeBlock, deleteLineOfCode: Function},{}>{
+
     constructor(props:any){
         super(props);
         this.constructCodeRenderObject = this.constructCodeRenderObject.bind(this);
+        this.deleteLineOfCode = this.deleteLineOfCode.bind(this);
         
     }
+
+    deleteLineOfCode(){
+        this.props.deleteLineOfCode(
+            this.props.codeBlock.variableName,
+        )
+    }
+
     constructCodeRenderObject() {
 
         let codeParagraph:any;  //any because it becomes a big mess of html
@@ -28,7 +37,7 @@ export class LineOfCode extends React.Component<{newProps:any,codeBlock:CodeBloc
                    
             }   //only 2 options for now.
         }   //this is the only thing we know how to parse for now
-        return (<Stack direction="horizontal" gap={3}>{codeParagraph} <Button type="button" variant="danger"><i className="fa fa-solid fa-trash-can"/></Button> </Stack>);
+        return (<Stack direction="horizontal" gap={3}>{codeParagraph} <Button type="button" variant="danger" onClick = {()=>this.deleteLineOfCode()}><i className="fa fa-trash"/></Button> </Stack>);
     }
     render() {
         return (<div key={this.props.codeBlock.key} className="bg-light border codeLineHolder" {...this.props.newProps } >{this.constructCodeRenderObject()}</div>);

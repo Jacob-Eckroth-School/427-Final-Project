@@ -19,7 +19,9 @@ export class SubRoutineDisplay extends React.Component<{subRoutine:SubRoutine},{
 
     }
 
-
+    delete(){
+        console.log("NOT READY YET")
+    }
 
 
     render() {
@@ -37,7 +39,7 @@ export class SubRoutineDisplay extends React.Component<{subRoutine:SubRoutine},{
                             })
                         }}
                         renderList={({ children, props }) => <Stack {...props}>{children}</Stack>}
-                        renderItem={({ value, props }) => <LineOfCode key={value.key} codeBlock={value} newProps={props}/>}
+                        renderItem={({ value, props }) => <LineOfCode key={value.key} codeBlock={value} newProps={props} deleteLineOfCode = {this.delete}/>}
                     />
                 </Container>
 

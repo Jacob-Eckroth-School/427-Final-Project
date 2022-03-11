@@ -5,10 +5,17 @@ import { LineOfCode } from "./LineOfCode";
 import { Library } from "../classes/Library";
 import { SubRoutineDisplay } from "./SubRoutineDisplay";
 import { Button } from "react-bootstrap";
+import { variableAssignmentTypes } from "../constants/variableAssignmentTypes";
 
 
 //displays a library
-export class LibraryDisplay extends React.Component<{ library: Library, notifyNewLibraryName: Function }, { library: Library }>{
+export class LibraryDisplay extends React.Component<{ library: Library, notifyNewLibraryName: Function, deleteVariable: Function, libraryName: string }, { 
+  library: Library, 
+  addVariableDestination: string, 
+  variableAssignmentType: number,  
+  variableName: string,
+  variableAssignment: string 
+}>{
 
   constructor(props: any) {
     super(props);
@@ -16,11 +23,15 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
     this.state =
     {
       library: this.props.library, //the library to be displayed
+      addVariableDestination: this.props.libraryName,
+      variableAssignmentType: variableAssignmentTypes.LAMBDA_LENGTH_STRING,
+      variableName: "",
+      variableAssignment: "",
 
     }
     this.enterNewLibraryName = this.enterNewLibraryName.bind(this);
+    this.deleteVariable = this.deleteVariable.bind(this);
   }
-
 
 
   enterNewLibraryName() {
@@ -31,7 +42,17 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
     })
     this.props.notifyNewLibraryName();
   }
-
+  deleteVariable(
+    variableName: string,
+  ) {
+    this.props.deleteVariable(
+      variableName,
+      1,
+      "re",
+      this.props.libraryName
+    )
+    this.setState({ library: this.state.library }) 
+  }
   render() {
     return (
       <Stack>
@@ -56,7 +77,7 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
               })
             }}
             renderList={({ children, props }) => <Stack {...props}>{children}</Stack>}
-            renderItem={({ value, props }) => <LineOfCode key={value.key} codeBlock={value} newProps={props} />}
+            renderItem={({ value, props }) => <LineOfCode key={value.key} codeBlock={value} newProps={props} deleteLineOfCode = {this.deleteVariable}/>}
           />
           {this.state.library.subRoutines.map((subRoutine) =>  //displaying all the subroutines within the library
 
