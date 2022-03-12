@@ -4,10 +4,11 @@ import { List } from 'react-movable';
 import { LineOfCode } from "./LineOfCode";
 import Container from "react-bootstrap/Container";
 import {SubRoutine} from "../classes/SubRoutine";
+import { CodeBlock } from "../classes/CodeBlock";
 
 
 //displays a sub routine within a library
-export class SubRoutineDisplay extends React.Component<{subRoutine:SubRoutine},{subRoutine:SubRoutine}> {
+export class SubRoutineDisplay extends React.Component<{subRoutine:SubRoutine,refactorLineOfCode:Function},{subRoutine:SubRoutine}> {
 
     constructor(props:any) {
         super(props);
@@ -16,11 +17,17 @@ export class SubRoutineDisplay extends React.Component<{subRoutine:SubRoutine},{
         {
             subRoutine: this.props.subRoutine
         }
+        this.delete = this.delete.bind(this);
+        this.refactorLineOfCode = this.refactorLineOfCode.bind(this);
 
     }
 
     delete(){
         console.log("NOT READY YET")
+    }
+
+    refactorLineOfCode(codeBlock:CodeBlock){
+        this.props.refactorLineOfCode(codeBlock)
     }
 
 
@@ -39,7 +46,7 @@ export class SubRoutineDisplay extends React.Component<{subRoutine:SubRoutine},{
                             })
                         }}
                         renderList={({ children, props }) => <Stack {...props}>{children}</Stack>}
-                        renderItem={({ value, props }) => <LineOfCode key={value.key} codeBlock={value} newProps={props} deleteLineOfCode = {this.delete}/>}
+                        renderItem={({ value, props }) => <LineOfCode key={value.key} codeBlock={value} newProps={props} deleteLineOfCode = {this.delete} refactorLineOfCode={this.refactorLineOfCode}/>}
                     />
                 </Container>
 

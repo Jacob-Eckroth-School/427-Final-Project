@@ -4,17 +4,20 @@ import { CodeBlock } from "../classes/CodeBlock";
 import { typeOfCodeLine, variableAssignmentTypes } from "../constants/variableAssignmentTypes";
 import { Button } from "react-bootstrap";
 import { Stack } from "react-bootstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faShuffle, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "../css/LineOfCode.css";
 //displays a line of code
 //only prop passed in is "codeString, and key"
 
 
-export class LineOfCode extends React.Component<{newProps:any,codeBlock:CodeBlock, deleteLineOfCode: Function},{}>{
+export class LineOfCode extends React.Component<{newProps:any,codeBlock:CodeBlock, deleteLineOfCode: Function,refactorLineOfCode: Function},{}>{
 
     constructor(props:any){
         super(props);
         this.constructCodeRenderObject = this.constructCodeRenderObject.bind(this);
         this.deleteLineOfCode = this.deleteLineOfCode.bind(this);
+        this.refactorLineOfCode = this.refactorLineOfCode.bind(this);
         
     }
 
@@ -22,6 +25,9 @@ export class LineOfCode extends React.Component<{newProps:any,codeBlock:CodeBloc
         this.props.deleteLineOfCode(
             this.props.codeBlock.variableName,
         )
+    }
+    refactorLineOfCode(){
+        this.props.refactorLineOfCode(this.props.codeBlock)
     }
 
     constructCodeRenderObject() {
@@ -52,7 +58,7 @@ export class LineOfCode extends React.Component<{newProps:any,codeBlock:CodeBloc
                 codeParagraph = <p className="codeText">return {`(${this.props.codeBlock.returnVariables?.join(',')})`}</p>
             }  
         }   //this is the only thing we know how to parse for now
-        return (<Stack direction="horizontal" gap={3}>{codeParagraph} <Button type="button" variant="danger" onClick = {()=>this.deleteLineOfCode()}><i className="fa fa-trash"/></Button> </Stack>);
+        return (<Stack direction="horizontal" gap={3}>{codeParagraph} <Button type="button" variant="info" onClick = {()=>this.refactorLineOfCode()}><FontAwesomeIcon icon={faShuffle} /></Button>  <Button type="button" variant="danger" onClick = {()=>this.deleteLineOfCode()}><FontAwesomeIcon icon={faTrash} /></Button> </Stack>);
     }
     render() {
         return (<div key={this.props.codeBlock.key} className="bg-light border codeLineHolder" {...this.props.newProps } >{this.constructCodeRenderObject()}</div>);
