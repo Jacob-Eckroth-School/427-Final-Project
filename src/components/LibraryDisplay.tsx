@@ -72,7 +72,7 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
     }    
     for(var i = 0; i < this.state.library.subRoutines.length; i++){
       for(var j = 0; j < this.state.library.subRoutines[i].codeBlocks.length; j++){
-        if(codeBlockFound){
+        if(codeBlockFound === true){
           break
         }
         if(this.state.library.subRoutines[i].codeBlocks[j].key === codeBlock.key){
