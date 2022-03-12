@@ -58,7 +58,45 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
 
   }
   refactorLocationChosen(codeBlock:CodeBlock,location:String){
-
+    //first we delete it from wherever it is.
+  //first we check all the libraries code blocks
+    var codeBlockFound = false;
+    for(var i = 0; i < this.state.library.codeBlocks.length; i++){
+      if(codeBlockFound === true){
+        break;
+      }
+      if(this.state.library.codeBlocks[i].key === codeBlock.key){
+          this.state.library.deleteCodeBlock(codeBlock);
+          codeBlockFound = true;
+      }
+    }    
+    for(var i = 0; i < this.state.library.subRoutines.length; i++){
+      for(var j = 0; j < this.state.library.subRoutines[i].codeBlocks.length; j++){
+        if(codeBlockFound){
+          break
+        }
+        if(this.state.library.subRoutines[i].codeBlocks[j].key === codeBlock.key){
+          this.state.library.subRoutines[i].deleteCodeBlock(codeBlock);
+          codeBlockFound = true;
+        }
+      }
+    }
+    if(!codeBlockFound){
+      alert("Code block not found!");
+    }else{
+      //now we add it.
+      if(this.state.library.name === location){
+        this.state.library.addNewCodeBlock(codeBlock);
+        return;
+      }else{
+        for(var i = 0; i < this.state.library.subRoutines.length; i++){
+          if(this.state.library.subRoutines[i].name === location){
+            this.state.library.subRoutines[i].addNewCodeBlock(codeBlock);
+            return;
+          }
+        }
+      }
+    }
   }
 
   refactorLineOfCode(codeBlock:CodeBlock){

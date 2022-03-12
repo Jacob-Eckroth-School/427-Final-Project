@@ -23,8 +23,15 @@ export class VerticallyCenteredModal extends React.Component<{
         this.hide = this.hide.bind(this);
         this.createWhereToRefactorOptions = this.createWhereToRefactorOptions.bind(this);
         this.changeWhereRefactoring = this.changeWhereRefactoring.bind(this);
+        this.submit = this.submit.bind(this);
     }
 
+
+    submit(){
+        this.props.chooseRefactorLocation(this.props.refactorCodeBlock,this.state.currentLocation);
+
+        this.hide();
+    }
     hide() {
         this.props.onHide(false);
     }
@@ -77,7 +84,7 @@ export class VerticallyCenteredModal extends React.Component<{
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={this.hide} variant="success">Refactor</Button>
+                    <Button onClick={this.submit} variant="success">Refactor</Button>
                 </Modal.Footer>
             </Modal>
         );
