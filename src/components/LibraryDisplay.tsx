@@ -5,7 +5,10 @@ import { LineOfCode } from "./LineOfCode";
 import { Library } from "../classes/Library";
 import { SubRoutineDisplay } from "./SubRoutineDisplay";
 import { Button } from "react-bootstrap";
+import {SubRoutine} from "../classes/SubRoutine"
 import { variableAssignmentTypes } from "../constants/variableAssignmentTypes";
+import { CodeBlock } from "../classes/CodeBlock";
+import { VerticallyCenteredModal } from "./VerticallyCenteredModal";
 
 
 //displays a library
@@ -14,10 +17,13 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
   addVariableDestination: string, 
   variableAssignmentType: number,  
   variableName: string,
-  variableAssignment: string 
+  variableAssignment: string,
+  modalShow:boolean,
+  refactoringCodeBlock:CodeBlock
 }>{
 
   constructor(props: any) {
+  
     super(props);
 
     this.state =
@@ -27,10 +33,46 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
       variableAssignmentType: variableAssignmentTypes.LAMBDA_LENGTH_STRING,
       variableName: "",
       variableAssignment: "",
+      modalShow:false,
+      refactoringCodeBlock:null,
 
     }
     this.enterNewLibraryName = this.enterNewLibraryName.bind(this);
     this.deleteVariable = this.deleteVariable.bind(this);
+    this.refactorLineOfCode = this.refactorLineOfCode.bind(this);
+    this.refactorLocationChosen = this.refactorLocationChosen.bind(this);
+    this.getPossibleRefactorLocations = this.getPossibleRefactorLocations.bind(this);
+    this.setRefactorModalShow = this.setRefactorModalShow.bind(this)
+  }
+ 
+
+  getPossibleRefactorLocations():string[]{
+    var returnList: string[] = []
+    returnList.push(this.state.library.name)
+    for(var i = 0; i < this.state.library.subRoutines.length; i++){
+      returnList.push(this.state.library.subRoutines[i].name)
+    }
+
+     
+    return returnList
+
+  }
+  refactorLocationChosen(codeBlock:CodeBlock,location:String){
+
+  }
+
+  refactorLineOfCode(codeBlock:CodeBlock){
+
+    this.setState({
+      refactoringCodeBlock:codeBlock,
+      modalShow:true
+    })
+  }
+
+  setRefactorModalShow(show:boolean){
+      this.setState({
+        modalShow:show
+      })
   }
 
 
@@ -77,19 +119,28 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
               })
             }}
             renderList={({ children, props }) => <Stack {...props}>{children}</Stack>}
-            renderItem={({ value, props }) => <LineOfCode key={value.key} codeBlock={value} newProps={props} deleteLineOfCode = {this.deleteVariable}/>}
+            renderItem={({ value, props }) => <LineOfCode key={value.key} codeBlock={value} newProps={props} deleteLineOfCode = {this.deleteVariable} refactorLineOfCode={this.refactorLineOfCode}/>}
           />
           {this.state.library.subRoutines.map((subRoutine) =>  //displaying all the subroutines within the library
 
 
-            <SubRoutineDisplay key={subRoutine.name} subRoutine={subRoutine} />
+            <SubRoutineDisplay key={subRoutine.name} subRoutine={subRoutine} refactorLineOfCode={this.refactorLineOfCode} />
 
           )}
         </Container>
-
+        <VerticallyCenteredModal
+        
+        show={this.state.modalShow}
+        onHide={this.setRefactorModalShow}
+        refactorCodeBlock={this.state.refactoringCodeBlock}
+        chooseRefactorLocation={this.refactorLocationChosen}
+        getPossibleLocations={this.getPossibleRefactorLocations}
+     
+      />
 
 
       </Stack >
+      
     );
   }
 }

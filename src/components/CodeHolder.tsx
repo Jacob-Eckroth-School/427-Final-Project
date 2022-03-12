@@ -25,7 +25,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         this.handleNewVariableSubmitted = this.handleNewVariableSubmitted.bind(this);
         this.handleNewSubRoutineSubmitted = this.handleNewSubRoutineSubmitted.bind(this);
 
-      
+      this.newLibraryNameSet = this.newLibraryNameSet.bind(this)
         this.handleNewReturnStatementSubmitted = this.handleNewReturnStatementSubmitted.bind(this);
         this.handleVariableDeleted = this.handleVariableDeleted.bind(this);
         this.handleNewReturnStatementSubmitted = this.handleNewReturnStatementSubmitted.bind(this);
