@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Button, Container, Stack} from "react-bootstrap";
+import { KeyGenerator } from "../../classes/KeyGenerator";
 import { Library } from "../../classes/Library";
 import { PreviousLibraries } from "../../classes/PreviousLibraries";
 
@@ -35,7 +36,7 @@ export class PreviousLibrariesDisplay extends React.Component<{previousLibraries
         var smallLibraryDisplays:any = []
         for(let i = this.state.previousLibraries.size()-1; i >=0; i--){
             smallLibraryDisplays.push(
-                <Stack key={(this.state.previousLibraries.at(i).at(0) as Library).name + (this.state.previousLibraries.at(i).at(0) as Library).versionNumber.toString()}>
+                <Stack key={KeyGenerator.generateKey(20)}>
                    
                     <SavedLibraryDisplay
                     library={this.state.previousLibraries.at(i).at(0) as Library}/>
