@@ -1,6 +1,6 @@
 const path = require('path');
 module.exports = {
-   
+
 
     entry: './src/index.tsx',
     module: {
@@ -17,7 +17,7 @@ module.exports = {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js', '.css'],
-        
+
     },
     output: {
         filename: 'bundle.js',

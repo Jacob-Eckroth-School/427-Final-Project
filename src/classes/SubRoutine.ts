@@ -41,7 +41,7 @@ export class SubRoutine {
         for (i; i < parameters.length - 1; i++) {
             parametersString += parameters[i] + ", ";
         }
-        if (parameters.length != 0) {
+        if (parameters.length !== 0) {
 
             parametersString += parameters[i];
         }

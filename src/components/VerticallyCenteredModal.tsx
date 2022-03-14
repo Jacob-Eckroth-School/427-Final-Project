@@ -29,7 +29,9 @@ export class VerticallyCenteredModal extends React.Component<{
 
     submit(){
         this.props.chooseRefactorLocation(this.props.refactorCodeBlock,this.state.currentLocation);
-
+        this.setState({
+            currentLocation:this.props.getPossibleLocations()[0]
+        })
         this.hide();
     }
     hide() {

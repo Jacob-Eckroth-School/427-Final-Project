@@ -9,17 +9,17 @@ import { typeOfCodeLine } from "../constants/variableAssignmentTypes";
 import { CodeBlock } from "../classes/CodeBlock";
 import { Library } from "../classes/Library";
 import { SubRoutine } from "../classes/SubRoutine";
-import { variableAssignmentTypes } from "../constants/variableAssignmentTypes"
+
 import { PreviousLibraries } from "../classes/PreviousLibraries";
 import { PreviousLibrariesDisplay } from "./SavedComponents/PreviousLibrariesDisplay";
 import { Button } from "react-bootstrap";
 import { LatexGenerator } from "../classes/LatexGenerator";
-import axios from "axios";
 import { getHw2_2Library } from "../classes/DefaultLibraries";
+import { KeyGenerator } from "../classes/KeyGenerator";
 
 //the main holder for the library which holds all of the different components
 
-export class CodeHolder extends React.Component<{}, { totalLines: number, library: Library, previousLibraries: PreviousLibraries<[Library, string]> }> {
+export class CodeHolder extends React.Component<{}, {  library: Library, previousLibraries: PreviousLibraries<[Library, string]> }> {
     constructor(props: any) {
         super(props);
         this.handleNewVariableSubmitted = this.handleNewVariableSubmitted.bind(this);
@@ -36,7 +36,6 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         this.copyCurrentLatexToClipboard = this.copyCurrentLatexToClipboard.bind(this);
 
         this.state = {
-            totalLines: 0,
  
             library: getHw2_2Library(),
             previousLibraries: new PreviousLibraries<[Library, string]>()
@@ -82,16 +81,14 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
             newVariableName,
             newVariableAssignmentType,
             newVariableAssignment,
-            this.state.totalLines.toString()
+            KeyGenerator.generateKey(20)
         );
     
         var libraryFound = false;
         if (this.state.library.name === destination) {
             libraryFound = true;
             this.state.library.deleteCodeBlock(c);
-            this.setState({
-                totalLines: this.state.totalLines - 1,
-            });
+           
 
         }
 
@@ -112,7 +109,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
             newVariableName,
             newVariableAssignmentType,
             newVariableAssignment,
-            this.state.totalLines.toString()
+            KeyGenerator.generateKey(20)
         );
 
         var libraryFound = false;
@@ -120,9 +117,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         if (this.state.library.name === destination) {
             libraryFound = true;
             this.state.library.addNewCodeBlock(c);
-            this.setState({
-                totalLines: this.state.totalLines + 1,
-            });
+           
 
         }
 
@@ -132,10 +127,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
             if (subRoutine.name === destination) {
                 subRoutineFound = true;
                 subRoutine.addNewCodeBlock(c);
-                this.setState({
-                    totalLines: this.state.totalLines + 1,
-
-                });
+               
                 break;
             }
         }
@@ -180,7 +172,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
             "",
             assignmentType,
             returnAssignment,
-            this.state.totalLines.toString(),
+            KeyGenerator.generateKey(20),
             variables
         );
 
@@ -192,10 +184,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
             if (subRoutine.name === destination) {
                 subRoutineFound = true;
                 subRoutine.addNewCodeBlock(c);
-                this.setState({
-                    totalLines: this.state.totalLines + 1,
-
-                });
+              
                 break;
             }
         }
