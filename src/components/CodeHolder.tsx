@@ -70,7 +70,7 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
         //this.sendLatexToServer(latex)
     }
 
-    //function that is called whenever a variable is deleted from a LIBRARY
+    //function that is called whenever a variable is deleted from a Library
     handleVariableDeleted(
         newVariableName: string,
         newVariableAssignmentType: number,
@@ -93,6 +93,18 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
                 totalLines: this.state.totalLines - 1,
             });
 
+        }
+        var subRoutineFound = false;
+        for (const subRoutine of this.state.library.subRoutines) {   //looking for the library we will be submitting to
+            if (subRoutine.name === destination) {
+                subRoutineFound = true;
+                subRoutine.deleteCodeBlock(c);
+                this.setState({
+                    totalLines: this.state.totalLines - 1,
+
+                });
+                break;
+            }
         }
 
         this.setState({ library: this.state.library })

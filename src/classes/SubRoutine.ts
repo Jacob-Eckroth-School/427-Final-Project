@@ -79,6 +79,7 @@ export class SubRoutine {
                 i++
             }
             if (index > -1) {
+                this.variables.delete(this.codeBlocks[index].variableName)
                 this.codeBlocks.splice(index, 1); // 2nd parameter means remove one item only
             }   
         }

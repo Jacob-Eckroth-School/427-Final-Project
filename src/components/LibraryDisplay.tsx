@@ -162,7 +162,7 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
           {this.state.library.subRoutines.map((subRoutine) =>  //displaying all the subroutines within the library
 
 
-            <SubRoutineDisplay key={subRoutine.name} subRoutine={subRoutine} refactorLineOfCode={this.refactorLineOfCode} />
+            <SubRoutineDisplay key={subRoutine.name} subRoutine={subRoutine} refactorLineOfCode={this.refactorLineOfCode} deleteLineOfCode={this.props.deleteVariable} />
 
           )}
         </Container>
