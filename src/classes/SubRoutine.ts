@@ -69,20 +69,38 @@ export class SubRoutine {
     
     deleteCodeBlock(blockToDelete: CodeBlock){
         //Add check for referenced in other variables
+        let i = 0,j = 0, index = 0, k = 0
+        while(i < this.codeBlocks.length){
+            if(blockToDelete.variableName === this.codeBlocks[i].variableName){
+                index = i
+            }i++
+        }
         if (blockToDelete.type === typeOfCodeLine.VARIABLE_ASSIGNMENT) {
-            let i = 0
-            let index = -2
-            while(i < this.codeBlocks.length){
-                if(blockToDelete.variableName === this.codeBlocks[i].variableName){
-                    index = i
+            while(j < this.codeBlocks.length){
+                if(this.codeBlocks[j].type == typeOfCodeLine.VARIABLE_ASSIGNMENT){
+                    if(this.codeBlocks[j].variableAssignment.includes(this.codeBlocks[index].variableName) && j != index){
+                        alert("This variabel is included in another variable assignment")
+                    }
                 }
-                i++
+                if(this.codeBlocks[j].type == typeOfCodeLine.RETURN_STATEMENT){
+                    while(k < this.codeBlocks[j].returnVariables.length){
+                        if(this.codeBlocks[j].returnVariables[k] == this.codeBlocks[index].variableName && j != index){    
+                            alert("This variable is included in a return statement")
+                        }k++
+                    }
+                }j++
             }
             if (index > -1) {
                 this.variables.delete(this.codeBlocks[index].variableName)
                 this.codeBlocks.splice(index, 1); // 2nd parameter means remove one item only
             }   
         }
+        else if (blockToDelete.type === typeOfCodeLine.RETURN_STATEMENT){
+            if (index > -1) {
+                this.variables.delete(this.codeBlocks[index].variableName)
+                this.codeBlocks.splice(index, 1); // 2nd parameter means remove one item only
+            }
+        } 
     }
 }
 

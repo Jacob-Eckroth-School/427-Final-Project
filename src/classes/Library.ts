@@ -81,8 +81,6 @@ export class Library {
                 }
                 i++
             }
-            let X = this.codeBlocks[0].variableAssignment
-            console.log(X)
             if (index > -1) {
                 this.variables.delete(this.codeBlocks[index].variableName)
                 this.codeBlocks.splice(index, 1); // 2nd parameter means remove one item only

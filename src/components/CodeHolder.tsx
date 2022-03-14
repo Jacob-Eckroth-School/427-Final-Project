@@ -72,13 +72,14 @@ export class CodeHolder extends React.Component<{}, { totalLines: number, librar
 
     //function that is called whenever a variable is deleted from a Library
     handleVariableDeleted(
+        type: number,
         newVariableName: string,
         newVariableAssignmentType: number,
         newVariableAssignment: string,
         destination: string
     ) {
         let c = new CodeBlock(
-            typeOfCodeLine.VARIABLE_ASSIGNMENT,
+            type,
             newVariableName,
             newVariableAssignmentType,
             newVariableAssignment,
