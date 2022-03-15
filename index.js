@@ -10,7 +10,7 @@ app.use(express.urlencoded()); //Parse URL-encoded bodies
 app.get("/", (req, res) => {
     res.send("This is from express.js");
 });
-var port = process.env.PORT || 8082
+var port = process.env.PORT || 5000
 
 
 // start express server on port 5000
