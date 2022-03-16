@@ -41,7 +41,7 @@ export class SubRoutine {
         for (i; i < parameters.length - 1; i++) {
             parametersString += parameters[i] + ", ";
         }
-        if (parameters.length != 0) {
+        if (parameters.length !== 0) {
 
             parametersString += parameters[i];
         }
@@ -54,21 +54,27 @@ export class SubRoutine {
         if (newCodeBlock.type === typeOfCodeLine.VARIABLE_ASSIGNMENT && !this.variables.has(newCodeBlock.variableName)) {
             this.variables.set(newCodeBlock.variableName, 1);
             this.codeBlocks.push(newCodeBlock);
+            return true
         }else if(newCodeBlock.type === typeOfCodeLine.RETURN_STATEMENT){
            
-                this.hasReturnStatement = true;
+            this.hasReturnStatement = true;
         
             this.codeBlocks.push(newCodeBlock);
+            return true
       
         }
-        else if (this.variables.has(newCodeBlock.variableName))
+        else if (this.variables.has(newCodeBlock.variableName)){
             alert("This variable has already been used. Please pick another name")
+            return false
+        }
+          
 
 
     }
     
-    deleteCodeBlock(blockToDelete: CodeBlock){
+    deleteCodeBlock(blockToDelete: CodeBlock):boolean{
         //Add check for referenced in other variables
+
         let i = 0,j = 0, index = 0, k = 0
         while(i < this.codeBlocks.length){
             if(blockToDelete.variableName === this.codeBlocks[i].variableName){
@@ -101,6 +107,13 @@ export class SubRoutine {
                 this.codeBlocks.splice(index, 1); // 2nd parameter means remove one item only
             }
         } 
+
+       }
+        }
+        alert("No code block found to delete")
+        return false;
+      
+     
     }
 }
 

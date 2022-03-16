@@ -61,7 +61,15 @@ export class LineOfCode extends React.Component<{newProps:any,codeBlock:CodeBloc
                 codeParagraph = <p className="codeText">return {`(${this.props.codeBlock.returnVariables?.join(',')})`}</p>
             }  
         }   //this is the only thing we know how to parse for now
-        return (<Stack direction="horizontal" gap={3}>{codeParagraph} <Button type="button" variant="info" onClick = {()=>this.refactorLineOfCode()}><FontAwesomeIcon icon={faShuffle} /></Button>  <Button type="button" variant="danger" onClick = {()=>this.deleteLineOfCode()}><FontAwesomeIcon icon={faTrash} /></Button> </Stack>);
+        return (<Stack direction="horizontal" gap={3}>{codeParagraph}
+         <Button type="button" variant="info" onClick = {()=>this.refactorLineOfCode()}>
+         <i className="fa-solid fa-arrow-up-arrow-down" aria-hidden="true"></i>
+        </Button>  
+        <Button type="button" variant="danger" onClick = {()=>this.deleteLineOfCode()}>
+        <i className="fa fa-trash" aria-hidden="true"></i>
+
+            </Button> 
+            </Stack>);
     }
     render() {
         return (<div key={this.props.codeBlock.key} className="bg-light border codeLineHolder" {...this.props.newProps } >{this.constructCodeRenderObject()}</div>);

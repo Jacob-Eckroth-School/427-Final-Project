@@ -154,7 +154,7 @@ export abstract class LatexGenerator {
             + "        \\centering%\n"
             + "        \\fboxsep=3pt%\n"
             + "        \\colorbox{black!15!highlightcolor}{\\color{highlighttextcolor}#1} \\\\\n"
-            + "        \\colorbox{highlightcolor}{\\color{highlighttextcolor}\codebox{#2}}%\n"
+            + "        \\colorbox{highlightcolor}{\\color{highlighttextcolor}\\codebox{#2}}%\n"
             + "        \\end{varwidth}%\n"
             + "    }\n"
             + "}\n"
