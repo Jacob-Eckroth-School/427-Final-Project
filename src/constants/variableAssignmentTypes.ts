@@ -7,6 +7,7 @@ export enum variableAssignmentTypes
 {
     LAMBDA_LENGTH_STRING=0,
     USER_INPUTED_VALUE,
+    SUBROUTINE_OUTPUT,
     VARIABLE,
     POSSIBLE_VARIABLE_TYPES
 

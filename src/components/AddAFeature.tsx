@@ -26,6 +26,7 @@ export class AddAFeature extends React.Component<{
     amountOfParameters: number, variableName: string,
     variableAssignment: string,
     variableAssignmentType: number,
+    addSubRoutineDestination: string,
 
 
     returnAssignment: string,
@@ -45,6 +46,7 @@ export class AddAFeature extends React.Component<{
   constructor(props: any) {
     super(props);
     this.state = {
+      addSubRoutineDestination : "",
       variableName: "",
       subRoutineName: "",
       addVariableSelected: true,
@@ -72,6 +74,7 @@ export class AddAFeature extends React.Component<{
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.lambdaStringChosen = this.lambdaStringChosen.bind(this);
     this.userEnteredVariableChosen = this.userEnteredVariableChosen.bind(this);
+    this.userEnteredSubroutineOutput = this.userEnteredSubroutineOutput.bind(this);
     this.handleVariableValueChange = this.handleVariableValueChange.bind(this);
     this.createAddVariableForm = this.createAddVariableForm.bind(this);
     this.createAddSubRoutineForm = this.createAddSubRoutineForm.bind(this);
@@ -85,6 +88,8 @@ export class AddAFeature extends React.Component<{
     this.displayParameterInputs = this.displayParameterInputs.bind(this);
     this.handleParameterNameChange = this.handleParameterNameChange.bind(this);
     this.changeWhereAddingVariable = this.changeWhereAddingVariable.bind(this);
+    this.createWhereToAddSubroutine = this.createWhereToAddSubroutine.bind(this);
+    this.userEnteredSubroutineOutput = this.userEnteredSubroutineOutput.bind(this);
 
 
     /*Return statement functions */
@@ -149,7 +154,8 @@ export class AddAFeature extends React.Component<{
       this.state.variableName,
       this.state.variableAssignmentType,
       this.state.variableAssignment,
-      this.state.addVariableDestination
+      this.state.addVariableDestination,
+      this.state.subRoutineName
     ) === true) {
       (document.getElementById("variableForm") as HTMLFormElement).reset();   //clears the form
       this.setState({
@@ -267,6 +273,13 @@ export class AddAFeature extends React.Component<{
 
   }
 
+  userEnteredSubroutineOutput() {
+
+    this.setState({
+      variableAssignmentType: variableAssignmentTypes.SUBROUTINE_OUTPUT
+    })
+  }
+
   //triggered when user chooses to enter their own variable value.
   userEnteredVariableChosen() {
 
@@ -281,10 +294,44 @@ export class AddAFeature extends React.Component<{
     })
   }
 
+  changeWhereAddingSubroutineOutput(target: string) {
+
+    this.setState({
+      addSubRoutineDestination: target
+    })
+  }
+
+  changeWhereNameSubroutineOutput(target: string){
+    this.setState({
+      subRoutineName: target
+    })
+  }
+
   changeWhereAddingReturnStatement(target: string) {
     this.setState({
       returnAssignmentDestination: target
     })
+  }
+
+  createWhereToAddSubroutine()  {
+    var options: any = [];
+    var destinationNameFound: boolean = false; // whether we have found where the destination is supposed to go
+    if (this.state.addVariableDestination === this.props.libraryName) {
+      destinationNameFound = true;
+    }
+
+    for (let subRoutineName of Array.from(this.props.currentSubRoutineNames.keys())) {
+      options.push(<option value={subRoutineName}>SubRoutine {subRoutineName}</option>)
+      if (subRoutineName === this.state.addVariableDestination) {
+        destinationNameFound = true;
+      }
+    }
+    if (!destinationNameFound) {
+      this.setState({
+        addVariableDestination: this.props.libraryName
+      })
+    }
+    return options;
   }
 
   //creates a list of the optinos for where a variable can be added
@@ -377,7 +424,30 @@ export class AddAFeature extends React.Component<{
             Input Value:
           </ToggleButton>
 
+          <ToggleButton
+            id="tbg-radio-3"
+            value={3}
+            onClick={this.userEnteredSubroutineOutput}
+          >
+            Subroutine Output:
+          </ToggleButton>
+
         </ToggleButtonGroup>
+
+        <Form.Group className="mb-4" hidden={this.state.variableAssignmentType === variableAssignmentTypes.SUBROUTINE_OUTPUT ? false : true}>
+        <Form.Label>What subroutine output should this variable be assigned to?</Form.Label>
+        <Form.Select aria-label="What subroutine output should this variable be assigned to"
+          onChange={(e) => {
+            this.changeWhereNameSubroutineOutput(e.target.value)
+          }
+
+
+
+          }>
+          {this.createWhereToAddSubroutine()}
+
+        </Form.Select>
+      </Form.Group>
 
         <Form.Control //we only show this control if the user assignment type is USER_INPUTTED_VALUE
           type="text"
