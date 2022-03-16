@@ -74,19 +74,46 @@ export class SubRoutine {
     
     deleteCodeBlock(blockToDelete: CodeBlock):boolean{
         //Add check for referenced in other variables
-        for(var i = 0; i < this.codeBlocks.length; i++){
-            if(this.codeBlocks[i].key === blockToDelete.key){
-                this.codeBlocks.splice(i,1);
-                if(blockToDelete.type === typeOfCodeLine.VARIABLE_ASSIGNMENT){
-                    this.variables.delete(blockToDelete.variableName)
+
+        let i = 0,j = 0, index = 0, k = 0
+        while(i < this.codeBlocks.length){
+            if(blockToDelete.variableName === this.codeBlocks[i].variableName){
+                index = i
+            }i++
+        }
+        if (blockToDelete.type === typeOfCodeLine.VARIABLE_ASSIGNMENT) {
+            while(j < this.codeBlocks.length){
+                if(this.codeBlocks[j].type == typeOfCodeLine.VARIABLE_ASSIGNMENT){
+                    if(this.codeBlocks[j].variableAssignment.includes(this.codeBlocks[index].variableName) && j != index){
+                        alert("This variabel is included in another variable assignment")
+                    }
                 }
-                return true;
+                if(this.codeBlocks[j].type == typeOfCodeLine.RETURN_STATEMENT){
+                    while(k < this.codeBlocks[j].returnVariables.length){
+                        if(this.codeBlocks[j].returnVariables[k] == this.codeBlocks[index].variableName && j != index){    
+                            alert("This variable is included in a return statement")
+                        }k++
+                    }
+                }j++
             }
+            if (index > -1) {
+                this.variables.delete(this.codeBlocks[index].variableName)
+                this.codeBlocks.splice(index, 1); // 2nd parameter means remove one item only
+            }   
+        }
+        else if (blockToDelete.type === typeOfCodeLine.RETURN_STATEMENT){
+            if (index > -1) {
+                this.variables.delete(this.codeBlocks[index].variableName)
+                this.codeBlocks.splice(index, 1); // 2nd parameter means remove one item only
+            }
+        } 
+
+       }
         }
         alert("No code block found to delete")
         return false;
       
-       
+     
     }
 }
 

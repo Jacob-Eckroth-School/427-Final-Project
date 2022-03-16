@@ -130,11 +130,15 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
   }
   deleteVariable(
     variableName: string,
+    type: number,
+    variableAssignment: string,
+    variableAssignmentType: number
   ) {
     this.props.deleteVariable(
+      type,
       variableName,
-      1,
-      "re",
+      variableAssignmentType,
+      variableAssignment,
       this.props.libraryName
     )
     this.setState({ library: this.state.library })
@@ -168,7 +172,7 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
           {this.state.library.subRoutines.map((subRoutine) =>  //displaying all the subroutines within the library
 
 
-            <SubRoutineDisplay key={KeyGenerator.generateKey(20)} subRoutine={subRoutine} refactorLineOfCode={this.refactorLineOfCode} />
+            <SubRoutineDisplay key={KeyGenerator.generateKey(20)} subRoutine={subRoutine} refactorLineOfCode={this.refactorLineOfCode} deleteLineOfCode={this.props.deleteVariable} />
 
           )}
         </Container>
