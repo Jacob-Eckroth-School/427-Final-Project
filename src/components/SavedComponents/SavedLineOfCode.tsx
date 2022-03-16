@@ -26,7 +26,10 @@ export class SavedLineOfCode extends React.Component<{newProps:any,codeBlock:Cod
                    
             } else if(this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.VARIABLE){
                 codeParagraph = <p className="codeText">{this.props.codeBlock.variableName} = {this.props.codeBlock.variableAssignment}</p>
-            }  
+            }  else if(this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.SUBROUTINE_OUTPUT){
+                codeParagraph = <p className="codeText">{this.props.codeBlock.variableName} = {this.props.codeBlock.subroutineName}(...)</p>
+            }
+              
         }else if(this.props.codeBlock.type=== typeOfCodeLine.RETURN_STATEMENT){
             if (this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.LAMBDA_LENGTH_STRING) {
                 codeParagraph = <p className="codeText">return &#123;0,1&#125;

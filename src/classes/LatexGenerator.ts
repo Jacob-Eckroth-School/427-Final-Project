@@ -280,6 +280,8 @@ export abstract class LatexGenerator {
                 return `$${codeBlock.variableName} := ${codeBlock.variableAssignment}$\\\\\n`;
             }else if(codeBlock.variableAssignmentType === variableAssignmentTypes.VARIABLE){
                 return `$${codeBlock.variableName} = ${codeBlock.variableAssignment}$\\\\\n`;
+            }else if(codeBlock.variableAssignmentType === variableAssignmentTypes.SUBROUTINE_OUTPUT){
+                return `$${codeBlock.variableName} \\gets ${codeBlock.subroutineName}()$\\\\\n`;
             }
         }else if(codeBlock.type === typeOfCodeLine.RETURN_STATEMENT){
             if(codeBlock.variableAssignmentType === variableAssignmentTypes.LAMBDA_LENGTH_STRING){

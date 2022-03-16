@@ -41,6 +41,8 @@ export class LineOfCode extends React.Component<{newProps:any,codeBlock:CodeBloc
                    
             }else if(this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.VARIABLE){
                 codeParagraph = <p className="codeText">{this.props.codeBlock.variableName} = {this.props.codeBlock.variableAssignment}</p>
+            }else if(this.props.codeBlock.variableAssignmentType === variableAssignmentTypes.SUBROUTINE_OUTPUT){
+                codeParagraph = <p className="codeText">{this.props.codeBlock.variableName} = {this.props.codeBlock.subroutineName}(...)</p>
             }
                 //only 2 options for now.
         }else if(this.props.codeBlock.type=== typeOfCodeLine.RETURN_STATEMENT){
@@ -58,7 +60,7 @@ export class LineOfCode extends React.Component<{newProps:any,codeBlock:CodeBloc
         }   //this is the only thing we know how to parse for now
         return (<Stack direction="horizontal" gap={3}>{codeParagraph}
          <Button type="button" variant="info" onClick = {()=>this.refactorLineOfCode()}>
-         <i className="fa-solid fa-arrow-up-arrow-down" aria-hidden="true"></i>
+        Refactor
         </Button>  
         <Button type="button" variant="danger" onClick = {()=>this.deleteLineOfCode()}>
         <i className="fa fa-trash" aria-hidden="true"></i>

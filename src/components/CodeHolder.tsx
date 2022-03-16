@@ -19,32 +19,32 @@ import { KeyGenerator } from "../classes/KeyGenerator";
 
 //the main holder for the library which holds all of the different components
 
-export class CodeHolder extends React.Component<{}, {  library: Library, previousLibraries: PreviousLibraries<[Library, string]> }> {
+export class CodeHolder extends React.Component<{}, { library: Library, previousLibraries: PreviousLibraries<[Library, string]> }> {
     constructor(props: any) {
         super(props);
         this.handleNewVariableSubmitted = this.handleNewVariableSubmitted.bind(this);
         this.handleNewSubRoutineSubmitted = this.handleNewSubRoutineSubmitted.bind(this);
 
-      this.newLibraryNameSet = this.newLibraryNameSet.bind(this)
+        this.newLibraryNameSet = this.newLibraryNameSet.bind(this)
         this.handleNewReturnStatementSubmitted = this.handleNewReturnStatementSubmitted.bind(this);
         this.handleVariableDeleted = this.handleVariableDeleted.bind(this);
         this.handleNewReturnStatementSubmitted = this.handleNewReturnStatementSubmitted.bind(this);
-      
+
 
         this.saveCurrentLibrary = this.saveCurrentLibrary.bind(this);
         this.showLatex = this.showLatex.bind(this);
         this.copyCurrentLatexToClipboard = this.copyCurrentLatexToClipboard.bind(this);
 
         this.state = {
- 
+
             library: getHw2_2Library(),
             previousLibraries: new PreviousLibraries<[Library, string]>()
         };
     }
 
-    newLibraryNameSet(){
+    newLibraryNameSet() {
         this.setState({
-            library:this.state.library
+            library: this.state.library
         })
     }
     //moves the current library into a list of saved libraries, and displays it on the left side of the screen
@@ -71,16 +71,16 @@ export class CodeHolder extends React.Component<{}, {  library: Library, previou
 
     //function that is called whenever a variable is deleted from a Library
     handleVariableDeleted(
-      codeBlock:CodeBlock,
-      destination:string
+        codeBlock: CodeBlock,
+        destination: string
     ) {
-      
-    
+
+
         var libraryFound = false;
         if (this.state.library.name === destination) {
             libraryFound = true;
             this.state.library.deleteCodeBlock(codeBlock);
-           
+
 
         }
         var subRoutineFound = false;
@@ -88,7 +88,7 @@ export class CodeHolder extends React.Component<{}, {  library: Library, previou
             if (subRoutine.name === destination) {
                 subRoutineFound = true;
                 subRoutine.deleteCodeBlock(codeBlock);
-               
+
                 break;
             }
         }
@@ -104,7 +104,7 @@ export class CodeHolder extends React.Component<{}, {  library: Library, previou
         newVariableAssignmentType: number,
         newVariableAssignment: string,
         destination: string,
-        subroutineName : string
+        subroutineName: string
     ) {
         let c = new CodeBlock(
             typeOfCodeLine.VARIABLE_ASSIGNMENT,
@@ -114,13 +114,13 @@ export class CodeHolder extends React.Component<{}, {  library: Library, previou
             KeyGenerator.generateKey(20),
             [], subroutineName
         );
-
+        console.log(subroutineName)
         var libraryFound = false;
 
         if (this.state.library.name === destination) {
             libraryFound = true;
             this.state.library.addNewCodeBlock(c);
-           
+
 
         }
 
@@ -130,7 +130,7 @@ export class CodeHolder extends React.Component<{}, {  library: Library, previou
             if (subRoutine.name === destination) {
                 subRoutineFound = true;
                 subRoutine.addNewCodeBlock(c);
-               
+
                 break;
             }
         }
@@ -169,7 +169,7 @@ export class CodeHolder extends React.Component<{}, {  library: Library, previou
             return true;
         }
     }
-    handleNewReturnStatementSubmitted(returnAssignment:string,destination:string,assignmentType:number,variables:string[]){
+    handleNewReturnStatementSubmitted(returnAssignment: string, destination: string, assignmentType: number, variables: string[]) {
         let c = new CodeBlock(
             typeOfCodeLine.RETURN_STATEMENT,
             "",
@@ -179,7 +179,7 @@ export class CodeHolder extends React.Component<{}, {  library: Library, previou
             variables
         );
 
-        
+
 
 
         var subRoutineFound = false;
@@ -187,7 +187,7 @@ export class CodeHolder extends React.Component<{}, {  library: Library, previou
             if (subRoutine.name === destination) {
                 subRoutineFound = true;
                 subRoutine.addNewCodeBlock(c);
-              
+
                 break;
             }
         }
@@ -198,7 +198,7 @@ export class CodeHolder extends React.Component<{}, {  library: Library, previou
         } else {
             this.setState({ library: this.state.library })
             return true;
-        } 
+        }
     }
 
     copyCurrentLatexToClipboard() {

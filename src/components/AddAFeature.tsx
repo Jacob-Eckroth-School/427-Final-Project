@@ -155,7 +155,7 @@ export class AddAFeature extends React.Component<{
       this.state.variableAssignmentType,
       this.state.variableAssignment,
       this.state.addVariableDestination,
-      this.state.subRoutineName
+      this.state.addSubRoutineDestination
     ) === true) {
       (document.getElementById("variableForm") as HTMLFormElement).reset();   //clears the form
       this.setState({
@@ -215,7 +215,8 @@ export class AddAFeature extends React.Component<{
     this.setState({
       addVariableSelected: true,
       addReturnStatementSelected: false,
-      addSubRoutineSelected: false
+      addSubRoutineSelected: false,
+      addSubRoutineDestination: this.props.currentSubRoutines[0].name
     })
   }
 
@@ -302,8 +303,9 @@ export class AddAFeature extends React.Component<{
   }
 
   changeWhereNameSubroutineOutput(target: string){
+   
     this.setState({
-      subRoutineName: target
+      addSubRoutineDestination: target
     })
   }
 
