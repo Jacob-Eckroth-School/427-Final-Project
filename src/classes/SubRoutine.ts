@@ -1,4 +1,3 @@
-import { faLinesLeaning } from "@fortawesome/free-solid-svg-icons";
 import { arrayMove } from "react-movable";
 import { typeOfCodeLine } from "../constants/variableAssignmentTypes";
 import { CodeBlock } from "./CodeBlock";
