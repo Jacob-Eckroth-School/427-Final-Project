@@ -102,14 +102,16 @@ export class CodeHolder extends React.Component<{}, {  library: Library, previou
         newVariableName: string,
         newVariableAssignmentType: number,
         newVariableAssignment: string,
-        destination: string
+        destination: string,
+        subroutineName : string
     ) {
         let c = new CodeBlock(
             typeOfCodeLine.VARIABLE_ASSIGNMENT,
             newVariableName,
             newVariableAssignmentType,
             newVariableAssignment,
-            KeyGenerator.generateKey(20)
+            KeyGenerator.generateKey(20),
+            [], subroutineName
         );
 
         var libraryFound = false;

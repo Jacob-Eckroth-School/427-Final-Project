@@ -4,9 +4,10 @@ export class CodeBlock{
     variableAssignmentType:number;
     variableAssignment:string;
     key:string;
-    returnVariables:string[]
+    returnVariables:string[];
+    subroutineName:string;
     constructor(
-        type:number,variableName:string,variableAssignmentType:number,variableAssignment:string,key:string,returnVariables:string[] = []
+        type:number,variableName:string,variableAssignmentType:number,variableAssignment:string,key:string,returnVariables:string[] = [], subroutineName : string  = ""
     ){
         this.type = type;
         this.variableName = variableName;
@@ -14,7 +15,7 @@ export class CodeBlock{
         this.variableAssignment = variableAssignment;
         this.key = key;
         this.returnVariables = returnVariables;
-       
+        this.subroutineName = subroutineName;
     }
 
    
