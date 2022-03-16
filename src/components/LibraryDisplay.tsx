@@ -60,44 +60,50 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
   refactorLocationChosen(codeBlock: CodeBlock, location: String) {
     //first we delete it from wherever it is.
     //first we check all the libraries code blocks
-    let codeBlockFound = false;
+    var found:boolean = false;
+    var success:boolean=false;
     for (let i = 0; i < this.state.library.codeBlocks.length; i++) {
-      if (codeBlockFound === true) {
-        break;
-      }
+      if(found) break;
       if (this.state.library.codeBlocks[i].key === codeBlock.key) {
-        this.state.library.deleteCodeBlock(codeBlock);
-        codeBlockFound = true;
+        found=true;
+        success = this.state.library.deleteCodeBlock(codeBlock);
+     
       }
     }
+
+
     for (let i = 0; i < this.state.library.subRoutines.length; i++) {
       for (let j = 0; j < this.state.library.subRoutines[i].codeBlocks.length; j++) {
-        if (codeBlockFound === true) {
-          break
-        }
+        if(found) break;
         if (this.state.library.subRoutines[i].codeBlocks[j].key === codeBlock.key) {
-          this.state.library.subRoutines[i].deleteCodeBlock(codeBlock);
-          codeBlockFound = true;
+          success =this.state.library.subRoutines[i].deleteCodeBlock(codeBlock);
+          found=true;
+         
         }
       }
     }
-    if (!codeBlockFound) {
-      alert("Code block not found!");
+    if(!found || !success){
+      return;
+    }
+
+    //now we add it.
+    if (this.state.library.name === location) {
+      this.state.library.addNewCodeBlock(codeBlock);
+      return
     } else {
-      //now we add it.
-      if (this.state.library.name === location) {
-        this.state.library.addNewCodeBlock(codeBlock);
-        return;
-      } else {
-        for (let i = 0; i < this.state.library.subRoutines.length; i++) {
-          if (this.state.library.subRoutines[i].name === location) {
-            this.state.library.subRoutines[i].addNewCodeBlock(codeBlock);
-            return;
-          }
+      for (let i = 0; i < this.state.library.subRoutines.length; i++) {
+        if (this.state.library.subRoutines[i].name === location) {
+          this.state.library.subRoutines[i].addNewCodeBlock(codeBlock);
+          return
         }
       }
     }
+
+
+
+    alert("Could not find code block to delete. Likely coding error.");
   }
+
 
   refactorLineOfCode(codeBlock: CodeBlock) {
 
