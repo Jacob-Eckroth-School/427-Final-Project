@@ -64,27 +64,36 @@ export class Library {
            
           
             this.codeBlocks.push(newCodeBlock)
+            return true
            
+        }else if(newCodeBlock.type === typeOfCodeLine.RETURN_STATEMENT){
+            alert("You cannot refactor a return statement into a library")
+            return false;
         }
-        else if (this.variables.has(newCodeBlock.variableName))
+        else if (this.variables.has(newCodeBlock.variableName)){
             alert("This variable has already been used. Please pick another name")
+            return false
+        }
+           
     }
 
-    deleteCodeBlock(blockToDelete: CodeBlock){
+  
+    deleteCodeBlock(blockToDelete: CodeBlock):boolean{
         //Add check for referenced in other variables
-        if (blockToDelete.type === typeOfCodeLine.VARIABLE_ASSIGNMENT) {
-            let i = 0
-            let index = -2
-            while(i < this.codeBlocks.length){
-                if(blockToDelete.variableName === this.codeBlocks[i].variableName){
-                    index = i
+        for(var i = 0; i < this.codeBlocks.length; i++){
+            if(this.codeBlocks[i].key === blockToDelete.key){
+                this.codeBlocks.splice(i,1);
+                if(blockToDelete.type === typeOfCodeLine.VARIABLE_ASSIGNMENT){
+                    this.variables.delete(blockToDelete.variableName)
                 }
-                i++
+                return true;
             }
-            if (index > -1) {
-                this.codeBlocks.splice(index, 1); // 2nd parameter means remove one item only
-            }   
         }
+        alert("No code block found to delete")
+        return false;
+      
+       
     }
 }
+
 
