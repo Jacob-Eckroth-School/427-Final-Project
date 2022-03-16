@@ -23,16 +23,10 @@ export class SubRoutineDisplay extends React.Component<{subRoutine:SubRoutine,re
     }
 
     deleteLineOfCode(
-        variableName: string,
-        type: number,
-        variableAssignment: string,
-        variableAssignmentType: number
+       codeBlock:CodeBlock
       ) {
         this.props.deleteLineOfCode(
-          type,
-          variableName,
-          variableAssignmentType,
-          variableAssignment,
+        codeBlock,
           this.props.subRoutine.name
         )
         this.setState({ subRoutine: this.state.subRoutine }) 

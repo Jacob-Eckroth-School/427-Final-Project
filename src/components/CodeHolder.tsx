@@ -71,24 +71,15 @@ export class CodeHolder extends React.Component<{}, {  library: Library, previou
 
     //function that is called whenever a variable is deleted from a Library
     handleVariableDeleted(
-        type: number,
-        newVariableName: string,
-        newVariableAssignmentType: number,
-        newVariableAssignment: string,
-        destination: string
+      codeBlock:CodeBlock,
+      destination:string
     ) {
-        let c = new CodeBlock(
-            type,
-            newVariableName,
-            newVariableAssignmentType,
-            newVariableAssignment,
-            KeyGenerator.generateKey(20)
-        );
+      
     
         var libraryFound = false;
         if (this.state.library.name === destination) {
             libraryFound = true;
-            this.state.library.deleteCodeBlock(c);
+            this.state.library.deleteCodeBlock(codeBlock);
            
 
         }
@@ -96,11 +87,8 @@ export class CodeHolder extends React.Component<{}, {  library: Library, previou
         for (const subRoutine of this.state.library.subRoutines) {   //looking for the library we will be submitting to
             if (subRoutine.name === destination) {
                 subRoutineFound = true;
-                subRoutine.deleteCodeBlock(c);
-                this.setState({
-                    totalLines: this.state.totalLines - 1,
-
-                });
+                subRoutine.deleteCodeBlock(codeBlock);
+               
                 break;
             }
         }

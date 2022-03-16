@@ -23,10 +23,7 @@ export class LineOfCode extends React.Component<{newProps:any,codeBlock:CodeBloc
 
     deleteLineOfCode(){
         this.props.deleteLineOfCode(
-            this.props.codeBlock.variableName,
-            this.props.codeBlock.type,
-            this.props.codeBlock.variableAssignmentType,
-            this.props.codeBlock.variableAssignment
+            this.props.codeBlock
         )
     }
     refactorLineOfCode(){

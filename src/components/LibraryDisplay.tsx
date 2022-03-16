@@ -38,7 +38,7 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
 
     }
     this.enterNewLibraryName = this.enterNewLibraryName.bind(this);
-    this.deleteVariable = this.deleteVariable.bind(this);
+    this.deleteLineOfCode = this.deleteLineOfCode.bind(this);
     this.refactorLineOfCode = this.refactorLineOfCode.bind(this);
     this.refactorLocationChosen = this.refactorLocationChosen.bind(this);
     this.getPossibleRefactorLocations = this.getPossibleRefactorLocations.bind(this);
@@ -60,29 +60,29 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
   refactorLocationChosen(codeBlock: CodeBlock, location: String) {
     //first we delete it from wherever it is.
     //first we check all the libraries code blocks
-    var found:boolean = false;
-    var success:boolean=false;
+    var found: boolean = false;
+    var success: boolean = false;
     for (let i = 0; i < this.state.library.codeBlocks.length; i++) {
-      if(found) break;
+      if (found) break;
       if (this.state.library.codeBlocks[i].key === codeBlock.key) {
-        found=true;
+        found = true;
         success = this.state.library.deleteCodeBlock(codeBlock);
-     
+
       }
     }
 
 
     for (let i = 0; i < this.state.library.subRoutines.length; i++) {
       for (let j = 0; j < this.state.library.subRoutines[i].codeBlocks.length; j++) {
-        if(found) break;
+        if (found) break;
         if (this.state.library.subRoutines[i].codeBlocks[j].key === codeBlock.key) {
-          success =this.state.library.subRoutines[i].deleteCodeBlock(codeBlock);
-          found=true;
-         
+          success = this.state.library.subRoutines[i].deleteCodeBlock(codeBlock);
+          found = true;
+
         }
       }
     }
-    if(!found || !success){
+    if (!found || !success) {
       return;
     }
 
@@ -128,20 +128,15 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
     })
     this.props.notifyNewLibraryName();
   }
-  deleteVariable(
-    variableName: string,
-    type: number,
-    variableAssignment: string,
-    variableAssignmentType: number
+  deleteLineOfCode(
+    codeBlock: CodeBlock,
+    destination: string=this.state.library.name
   ) {
     this.props.deleteVariable(
-      type,
-      variableName,
-      variableAssignmentType,
-      variableAssignment,
-      this.props.libraryName
+      codeBlock,
+     destination
     )
-    this.setState({ library: this.state.library })
+    this.setState({ library:this.state.library})
   }
   render() {
     return (
@@ -167,12 +162,12 @@ export class LibraryDisplay extends React.Component<{ library: Library, notifyNe
               })
             }}
             renderList={({ children, props }) => <Stack {...props}>{children}</Stack>}
-            renderItem={({ value, props }) => <LineOfCode key={value.key} codeBlock={value} newProps={props} deleteLineOfCode={this.deleteVariable} refactorLineOfCode={this.refactorLineOfCode} />}
+            renderItem={({ value, props }) => <LineOfCode key={value.key} codeBlock={value} newProps={props} deleteLineOfCode={this.deleteLineOfCode} refactorLineOfCode={this.refactorLineOfCode} />}
           />
           {this.state.library.subRoutines.map((subRoutine) =>  //displaying all the subroutines within the library
 
 
-            <SubRoutineDisplay key={KeyGenerator.generateKey(20)} subRoutine={subRoutine} refactorLineOfCode={this.refactorLineOfCode} deleteLineOfCode={this.props.deleteVariable} />
+            <SubRoutineDisplay key={KeyGenerator.generateKey(20)} subRoutine={subRoutine} refactorLineOfCode={this.refactorLineOfCode} deleteLineOfCode={this.deleteLineOfCode} />
 
           )}
         </Container>

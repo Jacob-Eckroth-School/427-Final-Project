@@ -1,3 +1,4 @@
+import { faLinesLeaning } from "@fortawesome/free-solid-svg-icons";
 import { arrayMove } from "react-movable";
 import { typeOfCodeLine } from "../constants/variableAssignmentTypes";
 import { CodeBlock } from "./CodeBlock";
@@ -8,7 +9,7 @@ export class SubRoutine {
     codeBlocks: CodeBlock[];
     variables: Map<string, number>;
     parameters: string[];
-    hasReturnStatement:boolean = false;
+    hasReturnStatement: boolean = false;
 
     /*
     @param libraryName lists what library the subroutine is in
@@ -21,7 +22,7 @@ export class SubRoutine {
         this.codeBlocks = subRoutineCodeBlocks;
         this.variables = new Map<string, number>()
         this.parameters = parameters;
-  
+
     }
 
 
@@ -55,65 +56,40 @@ export class SubRoutine {
             this.variables.set(newCodeBlock.variableName, 1);
             this.codeBlocks.push(newCodeBlock);
             return true
-        }else if(newCodeBlock.type === typeOfCodeLine.RETURN_STATEMENT){
-           
+        } else if (newCodeBlock.type === typeOfCodeLine.RETURN_STATEMENT) {
+
             this.hasReturnStatement = true;
-        
+
             this.codeBlocks.push(newCodeBlock);
             return true
-      
+
         }
-        else if (this.variables.has(newCodeBlock.variableName)){
+        else if (this.variables.has(newCodeBlock.variableName)) {
             alert("This variable has already been used. Please pick another name")
             return false
         }
-          
+
 
 
     }
-    
-    deleteCodeBlock(blockToDelete: CodeBlock):boolean{
+
+    deleteCodeBlock(blockToDelete: CodeBlock): boolean {
         //Add check for referenced in other variables
-
-        let i = 0,j = 0, index = 0, k = 0
-        while(i < this.codeBlocks.length){
-            if(blockToDelete.variableName === this.codeBlocks[i].variableName){
-                index = i
-            }i++
-        }
-        if (blockToDelete.type === typeOfCodeLine.VARIABLE_ASSIGNMENT) {
-            while(j < this.codeBlocks.length){
-                if(this.codeBlocks[j].type == typeOfCodeLine.VARIABLE_ASSIGNMENT){
-                    if(this.codeBlocks[j].variableAssignment.includes(this.codeBlocks[index].variableName) && j != index){
-                        alert("This variabel is included in another variable assignment")
-                    }
+      
+        for (var i = 0; i < this.codeBlocks.length; i++) {
+            if (this.codeBlocks[i].key === blockToDelete.key) {
+                this.codeBlocks.splice(i, 1);
+                if (blockToDelete.type === typeOfCodeLine.VARIABLE_ASSIGNMENT) {
+                    this.variables.delete(blockToDelete.variableName)
                 }
-                if(this.codeBlocks[j].type == typeOfCodeLine.RETURN_STATEMENT){
-                    while(k < this.codeBlocks[j].returnVariables.length){
-                        if(this.codeBlocks[j].returnVariables[k] == this.codeBlocks[index].variableName && j != index){    
-                            alert("This variable is included in a return statement")
-                        }k++
-                    }
-                }j++
+                return true;
             }
-            if (index > -1) {
-                this.variables.delete(this.codeBlocks[index].variableName)
-                this.codeBlocks.splice(index, 1); // 2nd parameter means remove one item only
-            }   
-        }
-        else if (blockToDelete.type === typeOfCodeLine.RETURN_STATEMENT){
-            if (index > -1) {
-                this.variables.delete(this.codeBlocks[index].variableName)
-                this.codeBlocks.splice(index, 1); // 2nd parameter means remove one item only
-            }
-        } 
-
-       }
         }
         alert("No code block found to delete")
         return false;
-      
-     
+
+
+
     }
 }
 
