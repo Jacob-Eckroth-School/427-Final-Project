@@ -4,8 +4,6 @@ import { CodeBlock } from "../classes/CodeBlock";
 import { typeOfCodeLine, variableAssignmentTypes } from "../constants/variableAssignmentTypes";
 import { Button } from "react-bootstrap";
 import { Stack } from "react-bootstrap";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faShuffle, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "../css/LineOfCode.css";
 //displays a line of code
 //only prop passed in is "codeString, and key"
